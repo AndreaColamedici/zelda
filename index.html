@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest Dweller's Project — TotK Companion</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --sheikah-blue: #00d4ff;
+  --sheikah-glow: #00d4ff30;
+  --zonai-green: #7cfc00;
+  --depths-purple: #8b5cf6;
+  --hyrule-gold: #f5c842;
+  --attack-red: #ef4444;
+  --defense-blue: #3b82f6;
+  --dark-bg: #080c16;
+  --panel-bg: #0f1520;
+  --card-bg: #151d2e;
+  --card-border: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  padding: 20px 24px 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--sheikah-blue);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.header .subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+  scroll-behavior: smooth;
+}
+
+.chat-area::-webkit-scrollbar { width: 5px; }
+.chat-area::-webkit-scrollbar-track { background: transparent; }
+.chat-area::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+
+.msg { max-width: 100%; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.msg.user { align-self: flex-end; max-width: 75%; }
+.msg.user .bubble {
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 16px 16px 4px 16px;
+  padding: 12px 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.msg.companion .bubble {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.msg.companion .bubble strong { color: var(--text-primary); }
+.msg.companion .bubble .hl { color: var(--hyrule-gold); font-weight: 600; }
+
+.cards-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 0;
+  margin-top: 12px;
+}
+.cards-row::-webkit-scrollbar { height: 4px; }
+.cards-row::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+.item-card {
+  min-width: 200px;
+  max-width: 240px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.item-card:hover {
+  border-color: var(--sheikah-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.1);
+}
+
+.card-img {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  position: relative;
+}
+.card-img .bg-glow {
+  position: absolute;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  filter: blur(35px);
+  opacity: 0.3;
+}
+.card-img.weapon .bg-glow { background: var(--attack-red); }
+.card-img.armor .bg-glow { background: var(--defense-blue); }
+.card-img.material .bg-glow { background: var(--zonai-green); }
+.card-img.zonai .bg-glow { background: var(--depths-purple); }
+
+.card-body { padding: 10px 14px 14px; }
+.card-name { font-weight: 600; font-size: 13px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-type { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.card-stats { display: flex; gap: 10px; align-items: center; }
+.card-stat { display: flex; align-items: center; gap: 3px; font-size: 12px; }
+.card-stat .val { font-weight: 700; font-size: 14px; }
+.card-stat.atk .val { color: var(--attack-red); }
+.card-stat.def .val { color: var(--defense-blue); }
+.card-rarity {
+  display: inline-block; padding: 2px 7px; border-radius: 4px;
+  font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-left: auto;
+}
+.card-rarity.legendary { background: rgba(245,200,66,0.15); color: var(--hyrule-gold); }
+.card-rarity.rare { background: rgba(139,92,246,0.15); color: var(--depths-purple); }
+.card-rarity.uncommon { background: rgba(0,212,255,0.15); color: var(--sheikah-blue); }
+.card-rarity.common { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+
+/* Detail panel */
+.detail-panel { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center; padding:20px; }
+.detail-panel.open { display:flex; }
+.detail-content { background:var(--panel-bg); border:1px solid var(--card-border); border-radius:16px; width:100%; max-width:560px; max-height:80vh; overflow-y:auto; animation:slideUp 0.25s ease; }
+@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+.detail-top { display:flex; align-items:center; gap:16px; padding:24px 24px 16px; border-bottom:1px solid var(--card-border); }
+.detail-emoji { font-size:48px; }
+.detail-info h2 { font-family:'Cinzel',serif; font-size:20px; color:var(--sheikah-blue); }
+.detail-info .detail-sub { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+.detail-close { margin-left:auto; width:36px; height:36px; border-radius:8px; background:var(--dark-bg); border:1px solid var(--card-border); color:var(--text-muted); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.detail-close:hover { color:var(--text-primary); border-color:var(--sheikah-blue); }
+
+.detail-stats-row { display:flex; gap:12px; padding:16px 24px; }
+.detail-stat-box { flex:1; background:var(--dark-bg); border-radius:10px; padding:14px; text-align:center; }
+.detail-stat-box .val { font-family:'Cinzel',serif; font-size:28px; font-weight:700; }
+.detail-stat-box .val.atk { color:var(--attack-red); }
+.detail-stat-box .val.def { color:var(--defense-blue); }
+.detail-stat-box .val.gold { color:var(--hyrule-gold); }
+.detail-stat-box .lbl { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+
+.detail-section { padding:0 24px 20px; }
+.detail-section h4 { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:8px; }
+.detail-section p { font-size:14px; line-height:1.7; color:var(--text-secondary); }
+.detail-location { display:flex; align-items:flex-start; gap:10px; background:var(--dark-bg); border-radius:10px; padding:14px 16px; margin-top:8px; }
+.detail-location .pin { font-size:20px; flex-shrink:0; }
+.detail-location .loc-text { font-size:13px; line-height:1.5; color:var(--text-primary); }
+.detail-fuse { background:rgba(245,200,66,0.08); border:1px solid rgba(245,200,66,0.15); border-radius:10px; padding:14px 16px; margin-top:8px; font-size:13px; line-height:1.5; color:var(--hyrule-gold); }
+
+.quick-actions { padding:8px 24px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; flex-shrink:0; }
+.quick-btn { padding:8px 16px; border-radius:20px; font-size:12px; font-weight:500; background:var(--card-bg); border:1px solid var(--card-border); color:var(--text-secondary); cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+.quick-btn:hover { border-color:var(--sheikah-blue); color:var(--sheikah-blue); }
+
+.input-area { padding:12px 24px 20px; flex-shrink:0; }
+.input-row { display:flex; gap:10px; align-items:center; }
+.input-field { flex:1; padding:14px 20px; background:var(--panel-bg); border:1px solid var(--card-border); border-radius:28px; color:var(--text-primary); font-size:14px; outline:none; transition:border-color 0.2s; }
+.input-field:focus { border-color:var(--sheikah-blue); box-shadow:0 0 0 3px var(--sheikah-glow); }
+.input-field::placeholder { color:var(--text-muted); }
+.send-btn { width:48px; height:48px; border-radius:50%; background:var(--sheikah-blue); border:none; color:var(--dark-bg); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+.send-btn:hover { background:#33ddff; transform:scale(1.05); }
+
+.typing { display:inline-flex; gap:4px; padding:4px 0; }
+.typing span { width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:blink 1.4s infinite; }
+.typing span:nth-child(2){animation-delay:0.2s;} .typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes blink { 0%,60%,100%{opacity:0.3;transform:translateY(0);} 30%{opacity:1;transform:translateY(-3px);} }
+
+@media(max-width:640px){.app{max-width:100%;}.chat-area{padding:12px 16px;}.input-area{padding:10px 16px 16px;}.item-card{min-width:170px;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>Forest Dweller's Project</h1>
+    <div class="subtitle">Tears of the Kingdom — Companion</div>
+  </header>
+  <div class="chat-area" id="chat"></div>
+  <div class="quick-actions" id="quick-actions">
+    <button class="quick-btn" data-q="How do I beat a Lynel?">Beat a Lynel</button>
+    <button class="quick-btn" data-q="What's the strongest weapon?">Strongest weapon</button>
+    <button class="quick-btn" data-q="Best armor for the Depths?">Depths armor</button>
+    <button class="quick-btn" data-q="How do I build an Air Bike?">Air Bike build</button>
+    <button class="quick-btn" data-q="Where can I find diamonds?">Find diamonds</button>
+    <button class="quick-btn" data-q="Best early game weapons?">Early game tips</button>
+  </div>
+  <div class="input-area">
+    <div class="input-row">
+      <input type="text" class="input-field" id="input" placeholder="Ask me anything about Hyrule...">
+      <button class="send-btn" id="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+</div>
+<div class="detail-panel" id="detail-panel"><div class="detail-content" id="detail-content"></div></div>
+
+<script>
+const DB={weapons:[
+{id:'w1',name:'Master Sword',sub:'One-Handed Sword',atk:30,rarity:'legendary',emoji:'🗡️',loc:'Light Dragon — ride it and pull the sword after recovering enough hearts (minimum 2 full stamina wheels recommended)',desc:'The legendary blade that seals the darkness. Never permanently breaks — recharges after 10 minutes. Shoots sword beams at full health. Deals +20 bonus damage against Gloom enemies.',fuse:'Light Dragon Horn Shard (+20 fuse attack) for 50 total sustained damage.'},
+{id:'w2',name:"Royal Guard's Claymore",sub:'Two-Handed Weapon',atk:32,rarity:'legendary',emoji:'⚔️',loc:"Hyrule Castle Sanctum — behind the throne, also in Princess Zelda's room chest",desc:'The single highest damage potential in the game. Its Breaking Point ability doubles all damage when the weapon is nearly broken. Combined with strong fuse materials, nothing hits harder.',fuse:'Silver Lynel Saber Horn (+55) = 87 base. Near breaking = ~160 damage per hit.'},
+{id:'w3',name:'Scimitar of the Seven',sub:'One-Handed Sword',atk:28,rarity:'legendary',emoji:'⚔️',loc:'Gerudo Town — reward from "Pride of the Gerudo" quest. Crafted with 4 Diamonds, 10 Flint, and a Gerudo Scimitar.',desc:'Doubles the power of any fused material, making it devastating with high-tier monster parts.',fuse:'Silver Lynel Saber Horn → 138 total attack power (doubled fusion).'},
+{id:'w4',name:'Lightscale Trident',sub:'Spear',atk:22,rarity:'legendary',emoji:'🔱',loc:"Zora's Domain — crafted by Dento. Requires 3 Diamonds, 5 Flint, and a Zora Spear.",desc:"Doubles attack power when Link is wet (rain, water, Sidon's ability). In the right conditions, becomes one of the most powerful weapons in the game.",fuse:'Silver Lynel Mace Horn when wet: 77-154 damage range.'},
+{id:'w5',name:'Savage Lynel Bow',sub:'Bow',atk:32,rarity:'rare',emoji:'🏹',loc:'Dropped by Silver and White-Maned Lynels in Gerudo Highlands and Lanayru Depths',desc:'Fires 3 arrows simultaneously for 96 total damage per shot. The ultimate ranged weapon.',fuse:'Bomb Flowers for triple explosive devastation.'},
+{id:'w6',name:'Hylian Shield',sub:'Shield',atk:0,def:90,rarity:'legendary',emoji:'🛡️',loc:'Hyrule Castle Docks — in the Lockup area. Light all braziers in the underground passage.',desc:'The highest defense shield in the game at 90. Virtually indestructible under normal use.',fuse:'Ruby for fire guard on parry, or Puffshroom for stealth smoke screen.'},
+{id:'w7',name:'Gloom Sword',sub:'One-Handed Sword',atk:41,rarity:'rare',emoji:'🗡️',loc:'Depths — dropped by Phantom Ganon encounters',desc:'Highest base attack one-handed sword at 41. Deals Gloom damage that can reduce max hearts.',fuse:null},
+{id:'w8',name:'Gloom Club',sub:'Two-Handed Weapon',atk:50,rarity:'rare',emoji:'🔨',loc:'Depths — Phantom Ganon encounters',desc:'The highest base attack of any melee weapon at 50. Massive Gloom-powered strikes.',fuse:null},
+{id:'w9',name:"Royal Guard's Bow",sub:'Bow',atk:50,rarity:'rare',emoji:'🏹',loc:'Hyrule Castle — various rooms and treasure chests',desc:'Highest single-shot bow damage at 50 per arrow. Best for precision shots.',fuse:null},
+{id:'w10',name:"Soldier's Broadsword",sub:'One-Handed Sword',atk:8,rarity:'common',emoji:'🗡️',loc:'Found everywhere — enemy camps, chests, Lookout Landing',desc:'Reliable early-game weapon. Common and easy to replace, perfect fusion base.',fuse:'Fuse with monster horns for easy early damage boost.'},
+{id:'w11',name:"Traveler's Sword",sub:'One-Handed Sword',atk:5,rarity:'common',emoji:'🗡️',loc:'Hyrule Field, Central Hyrule, Bokoblin Camps',desc:'The most basic sword. Great for learning fusion mechanics.'},
+{id:'w12',name:'Royal Broadsword',sub:'One-Handed Sword',atk:12,rarity:'uncommon',emoji:'🗡️',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Hyrulean royal guard weapon. Respawns in castle for reliable farming.'},
+{id:'w13',name:'Zora Sword',sub:'One-Handed Sword',atk:16,rarity:'uncommon',emoji:'🗡️',loc:"Zora's Domain area",desc:"Doubles damage when Link is wet. Pairs with rain or Sidon's water ability."},
+{id:'w14',name:'Gerudo Scimitar',sub:'One-Handed Sword',atk:17,rarity:'uncommon',emoji:'🗡️',loc:'Gerudo Desert — Koukot Plateau Cave, Ancient Altar Ruins',desc:'Doubles fused material attack power. Accessible version of the Scimitar of the Seven.'},
+{id:'w15',name:'Royal Claymore',sub:'Two-Handed Weapon',atk:20,rarity:'uncommon',emoji:'⚔️',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Respawning royal weapon. Good two-handed fusion base for mid-game.'},
+{id:'w16',name:'Boulder Breaker',sub:'Two-Handed Weapon',atk:40,rarity:'rare',emoji:'⚔️',loc:'Goron City — crafted after Yunobo quest. Needs Cobble Crusher + 5 Flint + 3 Diamonds.',desc:'Goron champion weapon. Massive damage, excellent against stone enemies. Re-craftable.'},
+{id:'w17',name:'Fierce Deity Sword',sub:'Two-Handed Weapon',atk:38,rarity:'legendary',emoji:'⚔️',loc:'Akkala region — available from Bargainer Statues for 160 Poes',desc:"Legendary weapon from Majora's Mask. Powerful two-handed with unique wild slash."},
+{id:'w18',name:'Gloom Spear',sub:'Spear',atk:40,rarity:'rare',emoji:'🔱',loc:'Depths — Phantom Ganon encounters',desc:'Strongest spear at 40 base attack. Fast spear strikes with Gloom power.'},
+{id:'w19',name:'Zora Spear',sub:'Spear',atk:9,rarity:'uncommon',emoji:'🔱',loc:"Zora's Domain",desc:'Doubles damage when wet. Essential crafting material for the Lightscale Trident.'},
+{id:'w20',name:'Royal Halberd',sub:'Spear',atk:26,rarity:'uncommon',emoji:'🔱',loc:'Hyrule Castle — respawns after Blood Moon',desc:'High-quality halberd with good reach. Reliable castle farm.'},
+{id:'w21',name:"Forest Dweller's Bow",sub:'Bow',atk:15,rarity:'uncommon',emoji:'🏹',loc:'Hyrule Forest, Korok Forest region',desc:'Fires 3 arrows per shot for 45 total. Great mid-game multi-shot bow.'},
+{id:'w22',name:'Royal Bow',sub:'Bow',atk:38,rarity:'uncommon',emoji:'🏹',loc:'Hyrule Castle — respawns after Blood Moon',desc:'High-powered single-shot bow. Excellent damage, reliable castle farm.'},
+{id:'w23',name:'Great Eagle Bow',sub:'Bow',atk:14,rarity:'legendary',emoji:'🏹',loc:'Rito Village — reward from Legacy of the Rito quest',desc:'Rito champion bow firing 3 arrows. Fast and graceful for aerial combat.'},
+{id:'w24',name:"Demon King's Bow",sub:'Bow',atk:50,rarity:'legendary',emoji:'🏹',loc:'Depths — reward from Demon King encounters',desc:'Scales with health — up to 50 damage at full hearts. The more hearts, the deadlier.'},
+{id:'w25',name:'Royal Shield',sub:'Shield',def:55,rarity:'uncommon',emoji:'🛡️',loc:'Hyrule Castle — Second Gatehouse turret',desc:'High-defense royal shield at 55. Excellent late-game choice before Hylian Shield.'},
+{id:'w26',name:'Savage Lynel Shield',sub:'Shield',def:62,rarity:'rare',emoji:'🛡️',loc:'Dropped by Silver and White-Maned Lynels',desc:'Second strongest shield at 62 defense. Dropped by toughest Lynels.'},
+{id:'w27',name:'Gloom Shield',sub:'Shield',def:50,rarity:'rare',emoji:'🛡️',loc:'Depths — Phantom Ganon encounters',desc:'Powerful Gloom-touched shield at 50 defense.'}
+],armor:[
+{id:'a1',name:'Barbarian Set',sub:'Attack Power',emoji:'⚔️',def:3,rarity:'legendary',loc:"Misko's Treasure quests — three separate treasure hunts across Hyrule",desc:'The premier combat armor. Each piece boosts attack power. Set bonus reduces charged attack stamina cost.',bonus:'Charge Attack Stamina Up',pieces:['Barbarian Helm','Barbarian Armor','Barbarian Leg Wraps']},
+{id:'a2',name:'Snowquill Set',sub:'Cold Resistance',emoji:'❄️',def:3,rarity:'uncommon',loc:'Rito Village armor shop — 1000 Rupees per piece',desc:'Essential for Hebra Mountains and all cold regions. At Level 2 upgrade, completely immune to freezing.',bonus:'Unfreezable',pieces:['Snowquill Headdress','Snowquill Tunic','Snowquill Tights']},
+{id:'a3',name:'Flamebreaker Set',sub:'Fire Resistance',emoji:'🔥',def:3,rarity:'uncommon',loc:'Goron City — Ripped and Shredded shop, 3300 Rupees total',desc:'Required for Death Mountain. Complete fire and burn immunity. Without it you catch fire in Eldin.',bonus:'Fireproof',pieces:['Flamebreaker Helm','Flamebreaker Armor','Flamebreaker Greaves']},
+{id:'a4',name:'Rubber Set',sub:'Shock Resistance',emoji:'⚡',def:3,rarity:'uncommon',loc:'Found near shrines: Toh Yahsa, Dag Ah Koh, Qukah Nata areas',desc:'Full electricity resistance. Complete set grants immunity to lightning strikes.',bonus:'Lightning Proof',pieces:['Rubber Helm','Rubber Suit','Rubber Tights']},
+{id:'a5',name:'Zora Set',sub:'Swim Speed',emoji:'🌊',def:3,rarity:'uncommon',loc:"Zora's Domain — quests and shops",desc:'Faster swimming, waterfall climbing, and reduced stamina drain while swim dashing.',bonus:'Swim Dash Stamina Up',pieces:['Zora Helm','Zora Armor','Zora Greaves']},
+{id:'a6',name:'Desert Voe Set',sub:'Heat Resistance',emoji:'🏜️',def:5,rarity:'uncommon',loc:'Gerudo Secret Club and Kara Kara Bazaar',desc:'Required for Gerudo Desert. Heat resistance plus shock damage resistance when fully equipped.',bonus:'Shock Damage Resist',pieces:['Desert Voe Headband','Desert Voe Spaulder','Desert Voe Trousers']},
+{id:'a7',name:'Glide Set',sub:'Sky Exploration',emoji:'🪂',def:2,rarity:'rare',loc:'Sky Island dive ceremonies and challenges',desc:'Fall damage completely negated with full set. Essential for Sky Island exploration.',bonus:'Impact Proof (no fall damage)',pieces:['Glide Mask','Glide Shirt','Glide Tights']},
+{id:'a8',name:'Climbing Set',sub:'Climbing Speed',emoji:'🧗',def:3,rarity:'uncommon',loc:'Various caves and mountain chests',desc:'Dramatically increases climbing speed and reduces stamina for climbing jumps.',bonus:'Climbing Jump Stamina Up',pieces:['Climbing Bandana','Climbing Gear','Climbing Boots']},
+{id:'a9',name:'Stealth Set',sub:'Stealth',emoji:'🥷',def:2,rarity:'uncommon',loc:'Kakariko Village — Enchanted armor shop',desc:'Maximum stealth for sneaking. Night Speed Up bonus increases movement after dark.',bonus:'Night Speed Up',pieces:['Stealth Mask','Stealth Chest Guard','Stealth Tights']},
+{id:'a10',name:'Depths Set',sub:'Gloom Protection',emoji:'🕳️',def:4,rarity:'rare',loc:'Depths — purchase from Bargainer Statues with Poes',desc:'Essential Depths armor. Protects hearts from Gloom damage underground.',bonus:'Gloom Attack Resist',pieces:['Depths Hood','Depths Tunic','Depths Greaves']},
+{id:'a11',name:"Ancient Hero's Aspect",sub:'Ultimate Armor',emoji:'👑',def:12,rarity:'legendary',loc:'Temple of Time — reward for completing ALL 152 Shrines',desc:'The ultimate endgame reward. Functions as all three pieces in one. Highest defense when fully upgraded.',bonus:'Master Sword Beam Up',pieces:['(Single piece — replaces all slots)']},
+{id:'a12',name:'Fierce Deity Set',sub:'Attack Power',emoji:'😈',def:3,rarity:'legendary',loc:'Skull Lake Cave, Cephla Lake Cave, Akkala Ancient Tech Lab ruins',desc:'Matches Barbarian Set with identical attack bonuses and Charge Attack Stamina Up.',bonus:'Charge Attack Stamina Up',pieces:['Fierce Deity Mask','Fierce Deity Armor','Fierce Deity Boots']},
+{id:'a13',name:'Dark Set',sub:'Depths Stealth',emoji:'🌑',def:3,rarity:'rare',loc:'Bargainer Statues in the Depths — 300, 150, and 200 Poes',desc:'Dark-themed armor for Depths navigation with Gloom resistance.',bonus:'Gloom Damage Resist',pieces:['Dark Hood','Dark Tunic','Dark Trousers']},
+{id:'a14',name:'Froggy Set',sub:'Rain Climbing',emoji:'🐸',def:3,rarity:'uncommon',loc:'Lucky Clover Gazette questline — complete newspaper side quests',desc:'Prevents slipping while climbing in rain. Game-changer in rainy regions.',bonus:'Slip Proof',pieces:['Froggy Helmet','Froggy Armor','Froggy Pants']},
+{id:'a15',name:'Zonaite Set',sub:'Energy Efficiency',emoji:'⚙️',def:4,rarity:'rare',loc:'Bargainer Statues in the Depths — purchased with Poes',desc:'Doubles battery recharge speed for all Zonai devices. Essential for builders.',bonus:'Energy Recharge Up',pieces:['Zonaite Helm','Zonaite Cuirass','Zonaite Shin Guards']},
+{id:'a16',name:'Radiant Set',sub:'Bone Attack',emoji:'💀',def:4,rarity:'uncommon',loc:'Kakariko Village — Enchanted armor shop',desc:'Glows in the dark, disguises as Stal enemy. Powers up bone weapon attacks.',bonus:'Bone Attack Up + Disguise',pieces:['Radiant Mask','Radiant Shirt','Radiant Tights']},
+{id:'a17',name:'Mystic Set',sub:'Rupee Protection',emoji:'💰',def:3,rarity:'rare',loc:'Various caves throughout Hyrule',desc:"Unique: lose Rupees instead of health when damaged. Effectively invincible if rich.",bonus:'Rupee Padding',pieces:['Mystic Helm','Mystic Armor','Mystic Greaves']},
+{id:'a18',name:'Ember Set',sub:'Hot Weather Attack',emoji:'🌋',def:4,rarity:'rare',loc:'Volcanic areas and fire-themed caves',desc:'Fire resistance plus attack boost in hot environments.',bonus:'Hot Weather Attack Up',pieces:['Ember Helm','Ember Armor','Ember Greaves']},
+{id:'a19',name:'Frostbite Set',sub:'Cold Weather Attack',emoji:'🧊',def:4,rarity:'rare',loc:'Cold regions and ice-themed caves',desc:'Boosts charge attack speed in cold weather. Turns Hebra into a combat playground.',bonus:'Cold Weather Charge Up',pieces:['Frostbite Helm','Frostbite Armor','Frostbite Greaves']},
+{id:'a20',name:'Charged Set',sub:'Storm Attack',emoji:'🌩️',def:4,rarity:'rare',loc:'Storm areas and electric-themed caves',desc:'Boosts charge attack power during thunderstorms.',bonus:'Stormy Weather Charge Up',pieces:['Charged Helm','Charged Armor','Charged Greaves']},
+{id:'a21',name:'Yiga Set',sub:'Infiltration',emoji:'🎭',def:3,rarity:'uncommon',loc:'Yiga Hideout infiltration side quests',desc:'Disguise as Yiga Clan member. Stealth bonuses for sneaky approaches.',bonus:'Stealth Up + Yiga Disguise',pieces:['Yiga Mask','Yiga Armor','Yiga Leg Wraps']},
+{id:'a22',name:'Hylian Set',sub:'Basic Armor',emoji:'🟢',def:3,rarity:'common',loc:"Lookout Landing — Mub's Shop, 70 Rupees per piece",desc:'The classic green tunic. Available early, solid basic defense.',bonus:'None',pieces:['Hylian Hood','Hylian Tunic','Hylian Trousers']},
+{id:'a23',name:"Soldier's Set",sub:'Basic Defense',emoji:'🔵',def:4,rarity:'common',loc:'Royal Hidden Passage beneath Hyrule Castle Field',desc:'Pure defense armor. Higher base defense than Hylian Set.',bonus:'None',pieces:["Soldier's Helm","Soldier's Armor","Soldier's Greaves"]},
+{id:'a24',name:"Miner's Set",sub:'Cave Navigation',emoji:'⛏️',def:4,rarity:'uncommon',loc:'Mining caves and underground shops',desc:'Creates glowing trail as you walk, illuminating dark caves.',bonus:'Luminous (glowing trail)',pieces:["Miner's Helm","Miner's Armor","Miner's Boots"]}
+],materials:[
+{id:'m1',name:'Silver Lynel Saber Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:55,loc:'Silver Lynels — Gerudo Highlands, Deep Akkala, Lanayru Depths',desc:'The most powerful fuse material at +55 attack. Dropped by Silver Lynels.'},
+{id:'m2',name:'Silver Lynel Mace Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:44,loc:'Silver Lynels — same locations',desc:'Second strongest Lynel horn at +44. Creates spinning mace when fused.'},
+{id:'m3',name:'Diamond',sub:'Gem',emoji:'💎',rarity:'rare',loc:'Stone Talus drops, black ore deposits in caves, Goron City merchant (1000 rupees)',desc:'Most valuable gem. Needed for crafting legendary weapons: 4 for Scimitar, 3 for Trident, 3 for Boulder Breaker.'},
+{id:'m4',name:'Ruby',sub:'Gem',emoji:'🔴',rarity:'uncommon',loc:'Red ore deposits, Eldin caves, Stone Talus drops',desc:'Fire gem. Fuse for fire damage/arrows/shield guard. Sells for 110 rupees.'},
+{id:'m5',name:'Sapphire',sub:'Gem',emoji:'🔵',rarity:'uncommon',loc:'Blue ore deposits, Lanayru caves',desc:'Ice gem. Fuse for ice damage/arrows. Sells for 150 rupees.'},
+{id:'m6',name:'Topaz',sub:'Gem',emoji:'🟡',rarity:'uncommon',loc:'Yellow ore deposits, Faron and Gerudo caves',desc:'Electric gem. Fuse for shock damage/arrows. Sells for 80 rupees.'},
+{id:'m7',name:'Zonaite',sub:'Ore',emoji:'🟩',rarity:'uncommon',loc:'Depths — ore deposits everywhere underground',desc:'Zonai crafting currency. Trade at Forge Constructs for devices and charges.'},
+{id:'m8',name:'Large Zonaite',sub:'Ore',emoji:'🟩',rarity:'rare',loc:'Depths — larger deposits, Flux Construct drops',desc:'Premium Zonaite for better rewards. Farm Flux Constructs.'},
+{id:'m9',name:'Muddle Bud',sub:'Plant',emoji:'🌸',rarity:'uncommon',loc:'Caves and Depths — grows near dark water',desc:'Best tactical material. Fuse to arrows: enemies attack each other. Fuse to shields: confusion on block.'},
+{id:'m10',name:'Bomb Flower',sub:'Explosive',emoji:'💣',rarity:'uncommon',loc:'Goron City region, caves, Depths',desc:'Fuse to arrows for explosive shots. Essential for breaking ore and AoE damage.'},
+{id:'m11',name:'Puffshroom',sub:'Plant',emoji:'🍄',rarity:'common',loc:'Caves throughout Hyrule',desc:'Creates smoke cloud. Fuse to arrows/shields for stealth. Great escape tool.'},
+{id:'m12',name:'Light Dragon Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Light Dragon — land on its head, strike the horn. Circles Hyrule at high altitude.',desc:'Best Master Sword fusion at +20. Cooked: 30-minute buff. Dragon circles continuously.'},
+{id:'m13',name:'Dinraal Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Dinraal — fire dragon through Eldin Canyon and Akkala Highlands',desc:'Fire dragon horn. +20 fuse with fire element. Cooked: 30-min fire resistance.'},
+{id:'m14',name:'Naydra Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Naydra — ice dragon through Lanayru and Mount Lanayru',desc:'Ice dragon horn. +20 fuse with ice element. Cooked: 30-min cold resistance.'},
+{id:'m15',name:'Farosh Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Farosh — electric dragon through Faron region and Lake Hylia',desc:'Electric dragon horn. +20 fuse with shock element. Cooked: 30-min shock resistance.'},
+{id:'m16',name:'Hearty Durian',sub:'Food',emoji:'🍈',rarity:'uncommon',loc:'Faron region — Faron Grasslands, near Lakeside Stable',desc:'Best healing food. Cooked alone: full recovery + bonus hearts. Stack 5 for massive overheal.'},
+{id:'m17',name:'Endura Carrot',sub:'Food',emoji:'🥕',rarity:'uncommon',loc:'Near Great Fairy Fountains and Satori Mountain',desc:'Cooked alone: full stamina recovery + temporary extra stamina.'},
+{id:'m18',name:'Star Fragment',sub:'Rare Material',emoji:'⭐',rarity:'rare',loc:'Falls from sky at night. Also Luminous Stone Talus drops.',desc:'Used for high-tier armor upgrades. Watch night sky from vantage points.'},
+{id:'m19',name:'Ancient Blade',sub:'Rare Material',emoji:'🔮',rarity:'legendary',loc:'Depths treasure chests or purchased with Poes',desc:'Fuse to arrow: instantly defeats any non-boss enemy. Save for emergencies.'}
+],builds:[
+{id:'b1',name:'Air Bike',sub:'S-Tier Vehicle',emoji:'🚁',rarity:'legendary',loc:'Build anywhere — 2 Fans + 1 Steering Stick from Zonai dispensers',desc:'The undisputed best vehicle. Two Fans at 45° with Steering Stick between them. Fast, efficient, stable. Save to Autobuild immediately.',components:'2× Fan (angled 45°) + 1× Steering Stick',difficulty:'Easy'},
+{id:'b2',name:'Flying Platform',sub:'A-Tier Vehicle',emoji:'🎈',rarity:'rare',loc:'Build anywhere — Balloons, Hover Stone, flat base',desc:'Simple hovering transport. Good for slow vertical ascent to Sky Islands.',components:'2× Balloon + 1× Hover Stone + Platform',difficulty:'Easy-Medium'},
+{id:'b3',name:'Battle Wagon',sub:'A-Tier Vehicle',emoji:'🛞',rarity:'rare',loc:'Build anywhere — Cart, Beam Emitters, Wheels, Steering Stick',desc:'Ground assault vehicle. Roll into camps with beam weapons blazing.',components:'Cart + 2× Beam Emitter + 4× Wheel + Steering Stick',difficulty:'Medium'},
+{id:'b4',name:'Rocket Sled',sub:'A-Tier Vehicle',emoji:'🚀',rarity:'rare',loc:'Build anywhere — Sled, Rockets, Steering Stick',desc:'Extreme speed ground vehicle. Insane acceleration, not very controllable but incredibly fun.',components:'Sled + 2× Rocket + Steering Stick',difficulty:'Medium'},
+{id:'b5',name:'Spring Launcher',sub:'B-Tier Utility',emoji:'🔧',rarity:'uncommon',loc:'Build anywhere — Springs + base',desc:'Step on Springs and launch skyward. Quick vertical access.',components:'2× Spring + Platform base',difficulty:'Easy'},
+{id:'b6',name:'Bomb Cart',sub:'B-Tier Utility',emoji:'💣',rarity:'uncommon',loc:'Build anywhere — Cart, Time Bombs',desc:'Automated explosive delivery. Point at camp, activate, watch from safety.',components:'Cart + 2× Time Bomb + Steering Stick',difficulty:'Easy'}
+]};
+
+const ALL=[...DB.weapons,...DB.armor,...DB.materials,...DB.builds];
+function itemType(item){if(DB.weapons.includes(item))return'weapon';if(DB.armor.includes(item))return'armor';if(DB.materials.includes(item))return'material';return'zonai';}
+
+function renderCard(item){const t=itemType(item);const a=item.atk?`<div class="card-stat atk"><span class="val">${item.atk}</span> ATK</div>`:'';const d=item.def?`<div class="card-stat def"><span class="val">${item.def}</span> DEF</div>`:'';const f=item.fuseDmg?`<div class="card-stat atk"><span class="val">+${item.fuseDmg}</span> FUSE</div>`:'';return`<div class="item-card" onclick="showDetail('${item.id}')"><div class="card-img ${t}"><div class="bg-glow"></div><span>${item.emoji||'📦'}</span></div><div class="card-body"><div class="card-name">${item.name}</div><div class="card-type">${item.sub}</div><div class="card-stats">${a}${d}${f}<span class="card-rarity ${item.rarity}">${item.rarity}</span></div></div></div>`;}
+function renderCards(items){if(!items.length)return'';return`<div class="cards-row">${items.map(renderCard).join('')}</div>`;}
+
+function showDetail(id){const item=ALL.find(i=>i.id===id);if(!item)return;let s='';if(item.atk)s+=`<div class="detail-stat-box"><div class="val atk">${item.atk}</div><div class="lbl">Attack</div></div>`;if(item.def)s+=`<div class="detail-stat-box"><div class="val def">${item.def}</div><div class="lbl">Defense</div></div>`;if(item.fuseDmg)s+=`<div class="detail-stat-box"><div class="val atk">+${item.fuseDmg}</div><div class="lbl">Fuse Bonus</div></div>`;if(item.bonus)s+=`<div class="detail-stat-box"><div class="val gold" style="font-size:14px">${item.bonus}</div><div class="lbl">Set Bonus</div></div>`;let p=item.pieces?`<div class="detail-section"><h4>Pieces</h4><p>${item.pieces.join(' · ')}</p></div>`:'';let fu=item.fuse?`<div class="detail-section"><h4>Best Fusion</h4><div class="detail-fuse">💡 ${item.fuse}</div></div>`:'';let co=item.components?`<div class="detail-section"><h4>Components</h4><p>${item.components}</p></div>`:'';document.getElementById('detail-content').innerHTML=`<div class="detail-top"><div class="detail-emoji">${item.emoji||'📦'}</div><div class="detail-info"><h2>${item.name}</h2><div class="detail-sub">${item.sub}</div></div><button class="detail-close" onclick="closeDetail()">✕</button></div>${s?`<div class="detail-stats-row">${s}</div>`:''}<div class="detail-section"><h4>Description</h4><p>${item.desc}</p></div><div class="detail-section"><h4>Where to Find</h4><div class="detail-location"><span class="pin">📍</span><div class="loc-text">${item.loc}</div></div></div>${fu}${p}${co}`;document.getElementById('detail-panel').classList.add('open');}
+function closeDetail(){document.getElementById('detail-panel').classList.remove('open');}
+document.getElementById('detail-panel').addEventListener('click',e=>{if(e.target.id==='detail-panel')closeDetail();});
+
+function match(t,kw){return kw.some(k=>t.includes(k));}
+function findItems(names){return names.map(n=>ALL.find(i=>i.name.toLowerCase()===n.toLowerCase())).filter(Boolean);}
+
+function findResponse(q){const ql=q.toLowerCase();
+if(match(ql,['lynel','beat','fight','kill'])){return{text:`Lynels are the toughest enemies in Hyrule. For melee, use <strong>Flurry Rush</strong> — dodge at the last moment. Wear the <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> for attack boosts, with a weapon fused with a strong horn (+30 or higher). For ranged, headshot to stun, then mount the Lynel and attack from its back — this doesn't consume weapon durability. Bring <span class="hl">Hearty Durian</span> meals for full recovery. After defeating them, they drop the best horns and bows in the game.`,cards:findItems(['barbarian set','savage lynel bow','master sword','silver lynel saber horn','fierce deity set'])};}
+if(match(ql,['strongest','best weapon','most powerful','highest damage'])){return{text:`The <span class="hl">Royal Guard's Claymore</span> fused with a <span class="hl">Silver Lynel Saber Horn</span> reaches 87 attack — and its Breaking Point doubles that to roughly <span class="hl">160 damage per hit</span> when nearly broken. For one-handed, the <span class="hl">Scimitar of the Seven</span> doubles fusion power, reaching 138. The <span class="hl">Gloom Club</span> has highest raw base at 50. And the <span class="hl">Master Sword</span> never breaks, making it the best sustained weapon.`,cards:findItems(["royal guard's claymore",'scimitar of the seven','master sword','gloom club'])};}
+if(match(ql,['early game','beginning','start','first'])){return{text:`Grab every <span class="hl">Soldier's Broadsword</span> you find and fuse with Bokoblin Horns. Buy the <span class="hl">Hylian Set</span> at Lookout Landing for 210 rupees total. Collect <span class="hl">Bomb Flowers</span> and <span class="hl">Puffshrooms</span> from caves — they're game-changers. Don't hoard weapons, fuse everything. Visit the Great Sky Island shrines first for Ultrahand, Fuse, and Ascend.`,cards:findItems(["soldier's broadsword",'hylian set','bomb flower','puffshroom'])};}
+if(match(ql,['depths','underground','deep','gloom'])){return{text:`Wear the <span class="hl">Depths Set</span> (buy with Poes at Bargainer Statues) for Gloom resistance. Without it, max hearts shrink permanently until surface. Throw Brightbloom Seeds constantly. <span class="hl">Gloom weapons</span> (41-50 attack) are powerful but risky. Farm <span class="hl">Zonaite</span> while underground. Save <span class="hl">Ancient Blades</span> for emergencies — they one-shot any non-boss.`,cards:findItems(['depths set','dark set','gloom sword','gloom club','zonaite','ancient blade'])};}
+if(match(ql,['air bike','fly','vehicle','build'])){return{text:`The <span class="hl">Air Bike</span> is the best vehicle. 2 Fans at 45° + Steering Stick between them. Fast, efficient, stable. Save to <strong>Autobuild</strong> immediately. The <span class="hl">Flying Platform</span> for slow vertical ascent, <span class="hl">Rocket Sled</span> for insane speed, <span class="hl">Battle Wagon</span> for rolling into camps with beam weapons.`,cards:findItems(['air bike','flying platform','rocket sled','battle wagon'])};}
+if(match(ql,['diamond','gem','rupee','money'])){return{text:`<span class="hl">Diamonds</span> drop from Stone Taluses (especially Rare variants), from black ore deposits in caves (Eldin and Gerudo), and Goron City merchant for 1000 rupees. You need them for legendary weapons: 4 for Scimitar, 3 each for Trident and Boulder Breaker. For rupees, sell gems: Diamonds (500), Sapphires (150), Rubies (110). Farm Stone Taluses after Blood Moon.`,cards:findItems(['diamond','ruby','sapphire','topaz'])};}
+if(match(ql,['armor','best armor','combat armor','defence','defense'])){return{text:`For combat: <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> — Attack Up + Charge Stamina Up. For Depths: <span class="hl">Depths Set</span> is essential. For Sky Islands: <span class="hl">Glide Set</span> with zero fall damage. Endgame: <span class="hl">Ancient Hero's Aspect</span> from all 152 shrines — highest defense in the game.`,cards:findItems(['barbarian set','fierce deity set','depths set','glide set',"ancient hero's aspect"])};}
+if(match(ql,['fusion','fuse','attach','combine'])){return{text:`Strongest fuse material: <span class="hl">Silver Lynel Saber Horn</span> at +55. Tactical: <span class="hl">Muddle Buds</span> make enemies fight each other, <span class="hl">Bomb Flowers</span> create explosive arrows, gems add elements. Key: some weapons <em>multiply</em> fusion power — Scimitar of the Seven and Gerudo Scimitar both double it. <span class="hl">Dragon Horn Shards</span> add +20 each with elements.`,cards:findItems(['silver lynel saber horn','muddle bud','bomb flower','light dragon horn shard'])};}
+if(match(ql,['cook','food','recipe','heal','hearts','stamina'])){return{text:`<span class="hl">Hearty Durian</span> (Faron region) cooked alone: full recovery + bonus hearts. <span class="hl">Endura Carrot</span> (near Great Fairy Fountains) cooked alone: full stamina recovery + bonus. Cook single high-value ingredients, not mixtures. Cook during Blood Moon for critical success. Five Hearty Durians = full recovery + 20 bonus hearts.`,cards:findItems(['hearty durian','endura carrot'])};}
+if(match(ql,['dragon','dinraal','naydra','farosh','light dragon'])){return{text:`Four dragons on set paths. <span class="hl">Light Dragon</span> circles all Hyrule at high altitude. <span class="hl">Dinraal</span> (fire) through Eldin/Akkala. <span class="hl">Naydra</span> (ice) through Lanayru. <span class="hl">Farosh</span> (electric) through Faron/Lake Hylia. Land on their back, climb to horn, strike. Each horn gives +20 fuse attack + element, and cooks into 30-minute resistance buff.`,cards:findItems(['light dragon horn shard','dinraal horn shard','naydra horn shard','farosh horn shard'])};}
+if(match(ql,['shrine','152','blessing'])){return{text:`<span class="hl">152 shrines</span> total: 120 surface, 32 sky. Each gives one Light of Blessing — trade 4 at Goddess Statues for a heart or stamina upgrade. Types: puzzle, combat, Proving Grounds (lose equipment), Rauru's Blessing (challenge is finding it). Complete all 152 for the <span class="hl">Ancient Hero's Aspect</span>. Use Shrine Sensor from Hateno Research Lab.`,cards:findItems(["ancient hero's aspect"])};}
+if(match(ql,['zonai','device','battery','energy'])){return{text:`Get Zonai Devices from dispensers on Sky Islands and in Depths. <span class="hl">Zonaite Set</span> doubles battery recharge — essential for builders. Farm <span class="hl">Zonaite</span> in the Depths. Key devices: Fans (flight), Wheels (ground), Rockets (speed), Beam Emitters (combat), Springs (launch). Learn the <span class="hl">Air Bike</span> first.`,cards:findItems(['zonaite set','air bike','zonaite','large zonaite'])};}
+const nameMatch=ALL.filter(i=>i.name.toLowerCase().includes(ql)||ql.includes(i.name.toLowerCase()));
+if(nameMatch.length>0){const item=nameMatch[0];let t=`<span class="hl">${item.name}</span> — ${item.desc}`;if(item.fuse)t+=`<br><br><strong>Best Fusion:</strong> ${item.fuse}`;if(item.components)t+=`<br><br><strong>Components:</strong> ${item.components}`;if(item.bonus)t+=`<br><br><strong>Set Bonus:</strong> ${item.bonus}`;if(item.pieces)t+=`<br><br><strong>Pieces:</strong> ${item.pieces.join(' · ')}`;return{text:t,cards:nameMatch.slice(0,5)};}
+const results=ALL.filter(i=>{const h=`${i.name} ${i.sub} ${i.desc} ${i.loc||''} ${i.bonus||''} ${i.fuse||''}`.toLowerCase();return ql.split(/\s+/).some(w=>w.length>2&&h.includes(w));});
+if(results.length>0)return{text:`Here's what I found:`,cards:results.slice(0,6)};
+return{text:`I don't have that yet — the knowledge base is growing. Try asking about weapons, armor, materials, builds, cooking, dragons, shrines, or combat tips like "How do I beat a Lynel?"`,cards:[]};}
+
+const chat=document.getElementById('chat');
+function addMsg(html,isUser=false){const d=document.createElement('div');d.className=`msg ${isUser?'user':'companion'}`;d.innerHTML=`<div class="bubble">${html}</div>`;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+function addCompanionMsg(text,cards=[]){const d=document.createElement('div');d.className='msg companion';d.innerHTML=`<div class="bubble">${text}${renderCards(cards)}</div>`;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
+function send(text){if(!text.trim())return;addMsg(text,true);document.getElementById('input').value='';const t=addMsg('<div class="typing"><span></span><span></span><span></span></div>');t.id='typing';setTimeout(()=>{document.getElementById('typing')?.remove();const r=findResponse(text);addCompanionMsg(r.text,r.cards);},500+Math.random()*500);}
+
+document.getElementById('send').addEventListener('click',()=>send(document.getElementById('input').value));
+document.getElementById('input').addEventListener('keypress',e=>{if(e.key==='Enter')send(e.target.value);});
+document.getElementById('quick-actions').addEventListener('click',e=>{if(e.target.classList.contains('quick-btn'))send(e.target.dataset.q);});
+addCompanionMsg(`Welcome to <span class="hl">Forest Dweller's Project</span>. I know everything about Tears of the Kingdom — every weapon, every armor set, every material, every build. Ask me anything, or tap a button below.`,[]);
+</script>
+</body>
+</html>

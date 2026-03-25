@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest Dweller's Sprite Picker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a14;color:#e0e0e0;font-family:'Segoe UI',sans-serif;padding:20px}
+h1{text-align:center;color:#60b0ff;margin-bottom:8px;font-size:1.6em}
+.subtitle{text-align:center;color:#888;margin-bottom:24px;font-size:.9em}
+.layout{display:flex;gap:20px;height:calc(100vh - 120px)}
+.panel{flex:1;border:1px solid #333;border-radius:12px;padding:16px;overflow-y:auto;background:#12121e}
+.panel h2{color:#60b0ff;margin-bottom:12px;font-size:1.1em;position:sticky;top:0;background:#12121e;padding:8px 0;z-index:2}
+.item-row{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;cursor:pointer;border:2px solid transparent;margin-bottom:4px;transition:all .2s}
+.item-row:hover{background:#1a1a2e}
+.item-row.selected{border-color:#60b0ff;background:#1a1a3e}
+.item-row.assigned{border-color:#40c060;background:#1a2e1a}
+.item-row .emoji{font-size:28px;width:40px;text-align:center;flex-shrink:0}
+.item-row .preview{width:48px;height:48px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#222}
+.item-row .preview img{width:100%;height:100%;object-fit:contain}
+.item-row .info{flex:1;min-width:0}
+.item-row .name{font-weight:600;font-size:.9em}
+.item-row .id{color:#888;font-size:.75em}
+.item-row .badge{font-size:.7em;padding:2px 6px;border-radius:4px;background:#333}
+.item-row .badge.done{background:#1a3a1a;color:#40c060}
+.sprite-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
+.sprite-cell{border-radius:8px;border:2px solid transparent;cursor:pointer;padding:4px;transition:all .2s;text-align:center;background:#0a0a14}
+.sprite-cell:hover{border-color:#60b0ff;background:#1a1a2e}
+.sprite-cell.picked{border-color:#40c060;background:#1a2e1a}
+.sprite-cell img{width:72px;height:72px;object-fit:contain}
+.sprite-cell .lbl{font-size:.6em;color:#666;margin-top:2px}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:6px;background:#1a1a2e;border:1px solid #333;cursor:pointer;font-size:.8em;color:#aaa;transition:all .2s}
+.tab.active{background:#2a2a4e;border-color:#60b0ff;color:#60b0ff}
+.actions{position:sticky;bottom:0;background:#12121e;padding:12px 0;border-top:1px solid #333;margin-top:12px;display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-size:.85em;font-weight:600}
+.btn-primary{background:#60b0ff;color:#0a0a14}.btn-primary:hover{background:#80c0ff}
+.btn-secondary{background:#333;color:#ccc}.btn-secondary:hover{background:#444}
+.btn-danger{background:#c04040;color:#fff}.btn-danger:hover{background:#d05050}
+.output-box{margin-top:16px;background:#1a1a2e;padding:12px;border-radius:8px;font-family:monospace;font-size:.75em;max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+.help{background:#1a1a2e;padding:12px;border-radius:8px;margin-bottom:16px;font-size:.8em;color:#aaa;line-height:1.5}
+.filter-input{width:100%;padding:8px;border-radius:6px;border:1px solid #333;background:#0a0a14;color:#e0e0e0;margin-bottom:8px;font-size:.85em}
+</style>
+</head>
+<body>
+<h1>Sprite Picker</h1>
+<p class="subtitle">Seleziona un item a sinistra, poi clicca lo sprite corretto a destra. Alla fine, esporta le assegnazioni.</p>
+
+<div class="layout">
+  <div class="panel" id="items-panel" style="flex:0 0 340px">
+    <h2>Items da mappare</h2>
+    <input class="filter-input" id="item-filter" placeholder="Filtra items...">
+    <div id="items-list"></div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="exportMapping()">Esporta mapping</button>
+      <button class="btn btn-danger" onclick="resetAll()">Reset</button>
+    </div>
+    <div id="output" class="output-box" style="display:none"></div>
+  </div>
+
+  <div class="panel" style="flex:1">
+    <h2>Sprite disponibili</h2>
+    <div class="tabs" id="sprite-tabs"></div>
+    <input class="filter-input" id="sprite-filter" placeholder="Filtra per numero...">
+    <div class="sprite-grid" id="sprite-grid"></div>
+  </div>
+</div>
+
+<script>
+const UNMAPPED_ITEMS = [
+  {id:'w8',name:'Gloom Club',emoji:'🏏',cat:'weapon'},
+  {id:'w13',name:'Zora Sword',emoji:'🗡️',cat:'weapon'},
+  {id:'w18',name:'Gloom Spear',emoji:'🔱',cat:'weapon'},
+  {id:'w24',name:"Demon King's Bow",emoji:'🏹',cat:'weapon'},
+  {id:'a1',name:'Barbarian Set',emoji:'⚔️',cat:'armor'},
+  {id:'a2',name:'Snowquill Set',emoji:'❄️',cat:'armor'},
+  {id:'a3',name:'Flamebreaker Set',emoji:'🔥',cat:'armor'},
+  {id:'a4',name:'Rubber Set',emoji:'⚡',cat:'armor'},
+  {id:'a5',name:'Zora Set',emoji:'🐟',cat:'armor'},
+  {id:'a6',name:'Desert Voe Set',emoji:'🏜️',cat:'armor'},
+  {id:'a7',name:'Glide Set',emoji:'🪂',cat:'armor'},
+  {id:'a8',name:'Climbing Set',emoji:'🧗',cat:'armor'},
+  {id:'a9',name:'Stealth Set',emoji:'🥷',cat:'armor'},
+  {id:'a10',name:'Depths Set',emoji:'🕳️',cat:'armor'},
+  {id:'a11',name:"Ancient Hero's Aspect",emoji:'✨',cat:'armor'},
+  {id:'a12',name:'Fierce Deity Set',emoji:'😈',cat:'armor'},
+  {id:'a13',name:'Dark Set',emoji:'🌑',cat:'armor'},
+  {id:'a14',name:'Froggy Set',emoji:'🐸',cat:'armor'},
+  {id:'a15',name:'Zonaite Set',emoji:'⚙️',cat:'armor'},
+  {id:'a16',name:'Radiant Set',emoji:'💀',cat:'armor'},
+  {id:'a17',name:'Mystic Set',emoji:'🔮',cat:'armor'},
+  {id:'a18',name:'Ember Set',emoji:'🌋',cat:'armor'},
+  {id:'a19',name:'Frostbite Set',emoji:'🧊',cat:'armor'},
+  {id:'a20',name:'Charged Set',emoji:'⚡',cat:'armor'},
+  {id:'a21',name:'Yiga Set',emoji:'👺',cat:'armor'},
+  {id:'a22',name:'Hylian Set',emoji:'🛡️',cat:'armor'},
+  {id:'a23',name:"Soldier's Set",emoji:'⚔️',cat:'armor'},
+  {id:'a24',name:"Miner's Set",emoji:'⛏️',cat:'armor'},
+  {id:'m2',name:'Silver Lynel Mace Horn',emoji:'🦁',cat:'material'},
+  {id:'m9',name:'Muddle Bud',emoji:'🟣',cat:'material'},
+  {id:'m10',name:'Bomb Flower',emoji:'💣',cat:'material'},
+  {id:'m11',name:'Puffshroom',emoji:'🍄',cat:'material'},
+  {id:'m12',name:'Light Dragon Horn',emoji:'🐉',cat:'material'},
+  {id:'m16',name:'Hearty Durian',emoji:'💚',cat:'material'},
+  {id:'m17',name:'Endura Carrot',emoji:'🥕',cat:'material'},
+  {id:'m19',name:'Ancient Blade',emoji:'⚔️',cat:'material'},
+  {id:'b1',name:'Air Bike',emoji:'🏍️',cat:'build'},
+  {id:'b2',name:'Flying Platform',emoji:'🛸',cat:'build'},
+  {id:'b3',name:'Battle Wagon',emoji:'⚔️',cat:'build'},
+  {id:'b4',name:'Rocket Sled',emoji:'🚀',cat:'build'},
+  {id:'b5',name:'Spring Launcher',emoji:'🔧',cat:'build'},
+  {id:'b6',name:'Bomb Cart',emoji:'💣',cat:'build'},
+];
+
+const SPRITE_CATEGORIES = [
+  {key:'weapons',label:'Armi (100)',count:100},
+  {key:'minerals',label:'Minerali (12)',count:12},
+  {key:'parts',label:'Creature Parts (80)',count:80},
+  {key:'misc',label:'Misc (66)',count:66},
+];
+
+let selectedItem = null;
+let activeCategory = 'weapons';
+let mapping = {};
+
+// Load saved mapping
+try { mapping = JSON.parse(localStorage.getItem('fdp-mapping')||'{}'); } catch(e){}
+
+function renderItems() {
+  const filter = document.getElementById('item-filter').value.toLowerCase();
+  const list = document.getElementById('items-list');
+  list.innerHTML = '';
+  UNMAPPED_ITEMS.filter(it => !filter || it.name.toLowerCase().includes(filter) || it.id.includes(filter)).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'item-row' + (selectedItem===item.id?' selected':'') + (mapping[item.id]?' assigned':'');
+    row.onclick = () => { selectedItem = item.id; renderItems(); };
+    const assigned = mapping[item.id];
+    row.innerHTML = `
+      <span class="emoji">${item.emoji}</span>
+      ${assigned ? `<div class="preview"><img src="sprites/${assigned.cat}/sprite_${String(assigned.num).padStart(3,'0')}.png"></div>` : ''}
+      <div class="info">
+        <div class="name">${item.name}</div>
+        <div class="id">${item.id} · ${item.cat}</div>
+      </div>
+      ${assigned ? '<span class="badge done">✓</span>' : '<span class="badge">?</span>'}
+    `;
+    list.appendChild(row);
+  });
+}
+
+function renderTabs() {
+  const tabs = document.getElementById('sprite-tabs');
+  tabs.innerHTML = '';
+  SPRITE_CATEGORIES.forEach(cat => {
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (activeCategory===cat.key?' active':'');
+    tab.textContent = cat.label;
+    tab.onclick = () => { activeCategory = cat.key; renderTabs(); renderSprites(); };
+    tabs.appendChild(tab);
+  });
+}
+
+function renderSprites() {
+  const filter = document.getElementById('sprite-filter').value;
+  const grid = document.getElementById('sprite-grid');
+  const cat = SPRITE_CATEGORIES.find(c=>c.key===activeCategory);
+  grid.innerHTML = '';
+  const assignedSprites = new Set(Object.values(mapping).filter(v=>v.cat===activeCategory).map(v=>v.num));
+  for (let i = 0; i < cat.count; i++) {
+    if (filter && !String(i).includes(filter)) continue;
+    const cell = document.createElement('div');
+    cell.className = 'sprite-cell' + (assignedSprites.has(i)?' picked':'');
+    cell.innerHTML = `<img src="sprites/${cat.key}/sprite_${String(i).padStart(3,'0')}.png" loading="lazy"><div class="lbl">#${i}</div>`;
+    cell.onclick = () => {
+      if (!selectedItem) { alert('Seleziona prima un item a sinistra!'); return; }
+      mapping[selectedItem] = {cat: activeCategory, num: i};
+      localStorage.setItem('fdp-mapping', JSON.stringify(mapping));
+      renderItems();
+      renderSprites();
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function exportMapping() {
+  const out = document.getElementById('output');
+  out.style.display = 'block';
+  if (Object.keys(mapping).length === 0) {
+    out.textContent = 'Nessuna assegnazione ancora.';
+    return;
+  }
+  // Generate shell commands to copy files
+  let cmds = '#!/bin/bash\n# Copy assigned sprites to img/ folder\n';
+  for (const [itemId, src] of Object.entries(mapping)) {
+    cmds += `cp sprites/${src.cat}/sprite_${String(src.num).padStart(3,'0')}.png img/${itemId}.png\n`;
+  }
+  cmds += '\necho "Done! Copied ' + Object.keys(mapping).length + ' sprites"';
+  out.textContent = cmds;
+
+  // Also copy to clipboard
+  navigator.clipboard.writeText(cmds).then(() => {
+    out.textContent += '\n\n✓ Copiato negli appunti!';
+  }).catch(() => {});
+}
+
+function resetAll() {
+  if (confirm('Sicuro di voler resettare tutte le assegnazioni?')) {
+    mapping = {};
+    localStorage.removeItem('fdp-mapping');
+    selectedItem = null;
+    renderItems();
+    renderSprites();
+  }
+}
+
+document.getElementById('item-filter').addEventListener('input', renderItems);
+document.getElementById('sprite-filter').addEventListener('input', renderSprites);
+
+renderItems();
+renderTabs();
+renderSprites();
+</script>
+</body>
+</html>

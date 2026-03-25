@@ -5,363 +5,506 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Forest Dweller's Project — TotK Companion</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
-:root {
-  --sheikah-blue: #00d4ff;
-  --sheikah-glow: #00d4ff30;
-  --zonai-green: #7cfc00;
-  --depths-purple: #8b5cf6;
-  --hyrule-gold: #f5c842;
-  --attack-red: #ef4444;
-  --defense-blue: #3b82f6;
-  --dark-bg: #080c16;
-  --panel-bg: #0f1520;
-  --card-bg: #151d2e;
-  --card-border: #1e293b;
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
+:root{
+  --sh:#00d4ff;--sh-dim:#0088aa;--sh-gl:rgba(0,212,255,0.25);
+  --zonai:#7cfc00;--depths:#a78bfa;--gold:#f5c842;
+  --red:#ff6b6b;--blue:#60a5fa;
+  --bg:#030810;--panel:#070e1c;--card:#0b1528;--border:#142040;
+  --t1:#e8ecf4;--t2:#94a3b8;--t3:#4a6080;
 }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ── BOOT ── */
+#boot{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s;}
+#boot.done{opacity:0;visibility:hidden;pointer-events:none;}
+#boot svg{width:80px;height:80px;animation:bp 1.5s ease-in-out infinite;}
+@keyframes bp{0%,100%{filter:drop-shadow(0 0 8px rgba(0,212,255,.3));transform:scale(1);}50%{filter:drop-shadow(0 0 30px rgba(0,212,255,.8));transform:scale(1.06);}}
+.bb-w{width:200px;height:2px;background:rgba(0,212,255,.1);border-radius:2px;margin-top:28px;overflow:hidden;}
+.bb{height:100%;width:0;background:var(--sh);border-radius:2px;transition:width .3s;box-shadow:0 0 12px rgba(0,212,255,.6);}
+.bt{font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;color:rgba(0,212,255,.4);margin-top:14px;text-transform:uppercase;}
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--dark-bg);
-  color: var(--text-primary);
-  height: 100vh;
-  overflow: hidden;
-}
+/* ── BODY ── */
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:100vh;overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 100% 50% at 50% -10%,rgba(0,212,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 10% 90%,rgba(167,139,250,.04) 0%,transparent 50%),radial-gradient(ellipse 60% 40% at 90% 80%,rgba(0,136,170,.03) 0%,transparent 50%);}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,212,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.018) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(0,0,0,.6) 0%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(0,0,0,.6) 0%,transparent 100%);}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 75% 65% at 50% 45%,transparent 50%,rgba(3,8,16,.7) 100%);}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:1;}
+#runes{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-width: 900px;
-  margin: 0 auto;
-}
+.app{display:flex;flex-direction:column;height:100vh;max-width:940px;margin:0 auto;position:relative;z-index:2;opacity:0;transition:opacity .6s ease .3s;}
+.app.visible{opacity:1;}
 
-.header {
-  padding: 20px 24px 12px;
-  text-align: center;
-  flex-shrink: 0;
-}
+/* ── HEADER ── */
+.header{padding:22px 24px 14px;text-align:center;flex-shrink:0;}
+.sheikah-eye{width:52px;height:52px;margin:0 auto 8px;animation:ef 6s ease-in-out infinite;filter:drop-shadow(0 0 15px rgba(0,212,255,.5));}
+@keyframes ef{0%,100%{transform:translateY(0);filter:drop-shadow(0 0 15px rgba(0,212,255,.4));}50%{transform:translateY(-4px);filter:drop-shadow(0 0 25px rgba(0,212,255,.7));}}
+.header h1{font-family:'Cinzel',serif;font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--sh) 0%,#66e0ff 50%,var(--sh) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ts 4s linear infinite;letter-spacing:6px;text-transform:uppercase;}
+@keyframes ts{0%{background-position:0% center;}100%{background-position:200% center;}}
+.header .sub{font-size:10px;color:var(--t3);margin-top:5px;letter-spacing:4px;text-transform:uppercase;}
+.hd{display:flex;align-items:center;gap:12px;width:280px;margin:14px auto 0;}
+.hd .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);}
+.hd .tri{width:10px;height:10px;position:relative;}.hd .tri::before{content:'';position:absolute;inset:0;clip-path:polygon(50% 0%,0% 100%,100% 100%);background:var(--sh);opacity:.4;}
 
-.header h1 {
-  font-family: 'Cinzel', serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--sheikah-blue);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
+/* ── CHAT ── */
+.chat-area{flex:1;overflow-y:auto;padding:12px 24px;display:flex;flex-direction:column;gap:24px;min-height:0;scroll-behavior:smooth;}
+.chat-area::-webkit-scrollbar{width:3px;}.chat-area::-webkit-scrollbar-track{background:transparent;}.chat-area::-webkit-scrollbar-thumb{background:rgba(0,212,255,.15);border-radius:3px;}
 
-.header .subtitle {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  letter-spacing: 1px;
-}
+/* ── MESSAGES ── */
+.msg{max-width:100%;animation:mi .5s cubic-bezier(.16,1,.3,1);}
+@keyframes mi{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.msg.user{align-self:flex-end;max-width:72%;}
+.msg.user .bubble{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(0,136,170,.06));border:1px solid rgba(0,212,255,.18);border-radius:20px 20px 4px 20px;padding:14px 22px;font-size:14px;line-height:1.6;backdrop-filter:blur(12px);box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.msg.companion .bubble{font-size:14px;line-height:1.85;color:var(--t2);}
+.msg.companion .bubble strong{color:var(--t1);}
+.msg.companion .bubble .hl{color:var(--gold);font-weight:600;text-shadow:0 0 18px rgba(245,200,66,.2);}
 
-.chat-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-height: 0;
-  scroll-behavior: smooth;
-}
+/* ── CARDS ── */
+.cards-row{display:flex;gap:14px;overflow-x:auto;padding:14px 4px 10px;margin-top:14px;}
+.cards-row::-webkit-scrollbar{height:3px;}.cards-row::-webkit-scrollbar-thumb{background:rgba(0,212,255,.12);border-radius:2px;}
+.item-card{min-width:215px;max-width:255px;background:linear-gradient(168deg,var(--card),#060d1a);border:1px solid var(--border);border-radius:16px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;transform-style:preserve-3d;perspective:800px;}
+.item-card.legendary-card{border-color:transparent;}.item-card.legendary-card::after{content:'';position:absolute;inset:-1px;border-radius:16px;padding:1px;background:linear-gradient(135deg,var(--gold),rgba(245,200,66,.1),var(--gold),rgba(0,212,255,.3),var(--gold));background-size:300% 300%;animation:lb 4s ease infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:1;}
+@keyframes lb{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.item-card.rare-card{border-color:rgba(167,139,250,.2);}.item-card.uncommon-card{border-color:rgba(0,212,255,.12);}
+.item-card:hover{transform:translateY(-6px) scale(1.03) rotateX(2deg);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 40px rgba(0,212,255,.06);}
+.item-card.legendary-card:hover{box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 50px rgba(245,200,66,.1);}
+.item-card.rare-card:hover{box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 40px rgba(167,139,250,.08);border-color:rgba(167,139,250,.4);}
+.card-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;}
+.card-img img{width:100%;height:100%;object-fit:contain;position:relative;z-index:2;padding:10px;transition:transform .4s cubic-bezier(.16,1,.3,1);filter:drop-shadow(0 2px 8px rgba(0,0,0,.4));}
+.item-card:hover .card-img img{transform:scale(1.12) translateY(-3px);}
+.card-img::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,var(--card));z-index:1;}
+.card-img .bg-glow{position:absolute;width:110px;height:110px;border-radius:50%;filter:blur(45px);opacity:.2;transition:all .5s;}
+.item-card:hover .bg-glow{opacity:.5;transform:scale(1.2);}
+.card-img.weapon .bg-glow{background:var(--red);}.card-img.armor .bg-glow{background:var(--blue);}.card-img.material .bg-glow{background:var(--zonai);}.card-img.zonai .bg-glow{background:var(--depths);}
+.card-img span{position:relative;z-index:2;transition:transform .4s cubic-bezier(.16,1,.3,1);}.item-card:hover .card-img span{transform:scale(1.15) translateY(-3px);}
+.card-body{padding:12px 16px 16px;position:relative;z-index:2;}
+.card-name{font-weight:600;font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f0f5ff;}
+.card-type{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;}
+.card-stats{display:flex;gap:10px;align-items:center;}
+.card-stat{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t3);}
+.card-stat .val{font-weight:700;font-size:16px;font-family:'Cinzel',serif;}
+.card-stat.atk .val{color:var(--red);text-shadow:0 0 10px rgba(255,107,107,.3);}
+.card-stat.def .val{color:var(--blue);text-shadow:0 0 10px rgba(96,165,250,.3);}
+.card-rarity{display:inline-block;padding:3px 9px;border-radius:6px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-left:auto;}
+.card-rarity.legendary{background:rgba(245,200,66,.1);color:var(--gold);border:1px solid rgba(245,200,66,.2);}
+.card-rarity.rare{background:rgba(167,139,250,.08);color:var(--depths);border:1px solid rgba(167,139,250,.18);}
+.card-rarity.uncommon{background:rgba(0,212,255,.06);color:var(--sh);border:1px solid rgba(0,212,255,.12);}
+.card-rarity.common{background:rgba(100,116,139,.06);color:var(--t3);border:1px solid rgba(100,116,139,.12);}
 
-.chat-area::-webkit-scrollbar { width: 5px; }
-.chat-area::-webkit-scrollbar-track { background: transparent; }
-.chat-area::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+/* ── MINIMAP ── */
+.minimap-wrap{margin-top:16px;background:linear-gradient(135deg,rgba(5,10,22,.8),rgba(8,14,28,.9));border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden;}
+.minimap-wrap::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.2),transparent);}
+.minimap-title{font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.minimap-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+.minimap-svg{width:100%;max-width:500px;margin:0 auto;display:block;}
 
-.msg { max-width: 100%; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* ── DETAIL PANEL ── */
+.detail-panel{display:none;position:fixed;inset:0;background:rgba(2,4,10,.88);backdrop-filter:blur(16px);z-index:1000;justify-content:center;align-items:center;padding:20px;}
+.detail-panel.open{display:flex;}
+.detail-content{background:linear-gradient(175deg,#0a1228,#040a18);border:1px solid var(--border);border-radius:22px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;animation:di .45s cubic-bezier(.16,1,.3,1);box-shadow:0 50px 100px rgba(0,0,0,.6),0 0 80px rgba(0,212,255,.04);position:relative;}
+.detail-content::-webkit-scrollbar{width:3px;}.detail-content::-webkit-scrollbar-thumb{background:rgba(0,212,255,.12);border-radius:2px;}
+@keyframes di{from{opacity:0;transform:translateY(40px) scale(.92);}to{opacity:1;transform:translateY(0) scale(1);}}
+.detail-content::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:22px 22px 0 0;z-index:10;}
+.detail-content.legendary-detail::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.detail-content.rare-detail::before{background:linear-gradient(90deg,transparent,var(--depths),transparent);}
+.detail-content.uncommon-detail::before{background:linear-gradient(90deg,transparent,var(--sh),transparent);}
+.detail-content.common-detail::before{background:linear-gradient(90deg,transparent,var(--t3),transparent);}
+.detail-hero{padding:32px 30px 24px;display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--border);position:relative;}
+.detail-hero::after{content:'';position:absolute;bottom:-1px;left:30px;right:30px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.15),transparent);}
+.detail-emoji-wrap{position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.detail-emoji-wrap .glow{position:absolute;inset:-10px;border-radius:50%;filter:blur(20px);opacity:.3;}
+.detail-emoji{font-size:48px;position:relative;z-index:1;}
+.detail-emoji-wrap img{width:100%;height:100%;object-fit:contain;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));}
+.detail-info h2{font-family:'Cinzel',serif;font-size:22px;color:var(--sh);text-shadow:0 0 25px rgba(0,212,255,.2);}
+.detail-info .detail-sub{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:2.5px;margin-top:5px;}
+.detail-close{margin-left:auto;width:42px;height:42px;border-radius:12px;background:rgba(3,8,16,.8);border:1px solid var(--border);color:var(--t3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.detail-close:hover{color:var(--sh);border-color:var(--sh);box-shadow:0 0 20px rgba(0,212,255,.12);}
+.detail-stats{display:flex;gap:12px;padding:22px 30px;}
+.stat-box{flex:1;background:linear-gradient(140deg,rgba(5,10,22,.9),rgba(8,14,28,.95));border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;position:relative;overflow:hidden;}
+.stat-box::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;border-radius:0 0 2px 2px;}
+.stat-box.atk-box::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+.stat-box.def-box::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.stat-box.gold-box::before{background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.stat-val{font-family:'Cinzel',serif;font-size:32px;font-weight:700;display:block;}
+.stat-val.atk{color:var(--red);text-shadow:0 0 25px rgba(255,107,107,.3);}
+.stat-val.def{color:var(--blue);text-shadow:0 0 25px rgba(96,165,250,.3);}
+.stat-val.gold{color:var(--gold);text-shadow:0 0 25px rgba(245,200,66,.3);}
+.stat-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:2px;margin-top:6px;}
+.stat-bar-wrap{width:80%;margin:8px auto 0;height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;}
+.stat-bar{height:100%;border-radius:2px;width:0;transition:width .8s cubic-bezier(.16,1,.3,1) .3s;}
+.stat-bar.atk{background:linear-gradient(90deg,var(--red),#ff9999);}.stat-bar.def{background:linear-gradient(90deg,var(--blue),#99ccff);}
+.detail-section{padding:0 30px 24px;}
+.detail-section h4{font-size:9px;text-transform:uppercase;letter-spacing:2.5px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.detail-section h4::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+.detail-section p{font-size:14px;line-height:1.85;color:var(--t2);}
+.detail-loc{display:flex;align-items:flex-start;gap:14px;background:linear-gradient(135deg,rgba(5,10,22,.7),rgba(8,14,28,.9));border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-top:12px;}
+.detail-loc .pin{font-size:24px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,212,255,.3));}.detail-loc .loc-text{font-size:13px;line-height:1.7;color:var(--t1);}
+.detail-fuse{background:linear-gradient(135deg,rgba(245,200,66,.05),rgba(245,200,66,.015));border:1px solid rgba(245,200,66,.12);border-radius:14px;padding:18px 20px;margin-top:12px;font-size:13px;line-height:1.7;color:var(--gold);position:relative;overflow:hidden;}
+.detail-fuse::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,200,66,.3),transparent);}
 
-.msg.user { align-self: flex-end; max-width: 75%; }
-.msg.user .bubble {
-  background: rgba(0, 212, 255, 0.12);
-  border: 1px solid rgba(0, 212, 255, 0.25);
-  border-radius: 16px 16px 4px 16px;
-  padding: 12px 18px;
-  font-size: 14px;
-  line-height: 1.5;
-}
+/* Detail minimap */
+.detail-map-section{padding:0 30px 24px;}
 
-.msg.companion .bubble {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
+/* ── QUICK ACTIONS ── */
+.quick-actions{padding:8px 24px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;flex-shrink:0;}
+.quick-btn{padding:10px 20px;border-radius:28px;font-size:12px;font-weight:500;background:rgba(7,14,28,.9);border:1px solid var(--border);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .35s cubic-bezier(.16,1,.3,1);backdrop-filter:blur(8px);position:relative;overflow:hidden;}
+.quick-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,212,255,.05));opacity:0;transition:opacity .3s;}.quick-btn:hover::before{opacity:1;}
+.quick-btn:hover{border-color:var(--sh);color:var(--sh);box-shadow:0 0 25px rgba(0,212,255,.08),inset 0 0 20px rgba(0,212,255,.03);transform:translateY(-2px);}
 
-.msg.companion .bubble strong { color: var(--text-primary); }
-.msg.companion .bubble .hl { color: var(--hyrule-gold); font-weight: 600; }
+/* ── INPUT ── */
+.input-area{padding:12px 24px 24px;flex-shrink:0;}
+.input-row{display:flex;gap:12px;align-items:center;}
+.input-field{flex:1;padding:16px 24px;background:rgba(7,14,28,.95);border:1px solid var(--border);border-radius:30px;color:var(--t1);font-size:14px;outline:none;transition:all .35s;backdrop-filter:blur(12px);}
+.input-field:focus{border-color:var(--sh);box-shadow:0 0 0 3px rgba(0,212,255,.08),0 0 40px rgba(0,212,255,.05);}
+.input-field::placeholder{color:var(--t3);}
+.send-btn{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--sh),var(--sh-dim));border:none;color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s cubic-bezier(.16,1,.3,1);box-shadow:0 4px 25px rgba(0,212,255,.3);position:relative;overflow:hidden;}
+.send-btn::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2),transparent 60%);}
+.send-btn:hover{transform:scale(1.1);box-shadow:0 6px 35px rgba(0,212,255,.4);}.send-btn:active{transform:scale(.95);}
 
-.cards-row {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 8px 0;
-  margin-top: 12px;
-}
-.cards-row::-webkit-scrollbar { height: 4px; }
-.cards-row::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+.typing{display:inline-flex;gap:6px;padding:8px 0;}.typing span{width:7px;height:7px;border-radius:50%;background:var(--sh);opacity:.2;animation:tp 1.4s ease-in-out infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes tp{0%,60%,100%{opacity:.15;transform:translateY(0) scale(1);}30%{opacity:1;transform:translateY(-5px) scale(1.3);}}
+.welcome-glow{display:inline;background:linear-gradient(90deg,var(--gold),var(--sh),var(--gold));background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:wg 3s linear infinite;font-weight:700;font-family:'Cinzel',serif;}
+@keyframes wg{0%{background-position:0% center;}100%{background-position:200% center;}}
 
-.item-card {
-  min-width: 200px;
-  max-width: 240px;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  overflow: hidden;
-  flex-shrink: 0;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.item-card:hover {
-  border-color: var(--sheikah-blue);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.1);
-}
-
-.card-img {
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  position: relative;
-}
-.card-img .bg-glow {
-  position: absolute;
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  filter: blur(35px);
-  opacity: 0.3;
-}
-.card-img.weapon .bg-glow { background: var(--attack-red); }
-.card-img.armor .bg-glow { background: var(--defense-blue); }
-.card-img.material .bg-glow { background: var(--zonai-green); }
-.card-img.zonai .bg-glow { background: var(--depths-purple); }
-
-.card-body { padding: 10px 14px 14px; }
-.card-name { font-weight: 600; font-size: 13px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-type { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.card-stats { display: flex; gap: 10px; align-items: center; }
-.card-stat { display: flex; align-items: center; gap: 3px; font-size: 12px; }
-.card-stat .val { font-weight: 700; font-size: 14px; }
-.card-stat.atk .val { color: var(--attack-red); }
-.card-stat.def .val { color: var(--defense-blue); }
-.card-rarity {
-  display: inline-block; padding: 2px 7px; border-radius: 4px;
-  font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-left: auto;
-}
-.card-rarity.legendary { background: rgba(245,200,66,0.15); color: var(--hyrule-gold); }
-.card-rarity.rare { background: rgba(139,92,246,0.15); color: var(--depths-purple); }
-.card-rarity.uncommon { background: rgba(0,212,255,0.15); color: var(--sheikah-blue); }
-.card-rarity.common { background: rgba(100,116,139,0.15); color: var(--text-muted); }
-
-/* Detail panel */
-.detail-panel { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center; padding:20px; }
-.detail-panel.open { display:flex; }
-.detail-content { background:var(--panel-bg); border:1px solid var(--card-border); border-radius:16px; width:100%; max-width:560px; max-height:80vh; overflow-y:auto; animation:slideUp 0.25s ease; }
-@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-
-.detail-top { display:flex; align-items:center; gap:16px; padding:24px 24px 16px; border-bottom:1px solid var(--card-border); }
-.detail-emoji { font-size:48px; }
-.detail-info h2 { font-family:'Cinzel',serif; font-size:20px; color:var(--sheikah-blue); }
-.detail-info .detail-sub { font-size:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
-.detail-close { margin-left:auto; width:36px; height:36px; border-radius:8px; background:var(--dark-bg); border:1px solid var(--card-border); color:var(--text-muted); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.detail-close:hover { color:var(--text-primary); border-color:var(--sheikah-blue); }
-
-.detail-stats-row { display:flex; gap:12px; padding:16px 24px; }
-.detail-stat-box { flex:1; background:var(--dark-bg); border-radius:10px; padding:14px; text-align:center; }
-.detail-stat-box .val { font-family:'Cinzel',serif; font-size:28px; font-weight:700; }
-.detail-stat-box .val.atk { color:var(--attack-red); }
-.detail-stat-box .val.def { color:var(--defense-blue); }
-.detail-stat-box .val.gold { color:var(--hyrule-gold); }
-.detail-stat-box .lbl { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
-
-.detail-section { padding:0 24px 20px; }
-.detail-section h4 { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:8px; }
-.detail-section p { font-size:14px; line-height:1.7; color:var(--text-secondary); }
-.detail-location { display:flex; align-items:flex-start; gap:10px; background:var(--dark-bg); border-radius:10px; padding:14px 16px; margin-top:8px; }
-.detail-location .pin { font-size:20px; flex-shrink:0; }
-.detail-location .loc-text { font-size:13px; line-height:1.5; color:var(--text-primary); }
-.detail-fuse { background:rgba(245,200,66,0.08); border:1px solid rgba(245,200,66,0.15); border-radius:10px; padding:14px 16px; margin-top:8px; font-size:13px; line-height:1.5; color:var(--hyrule-gold); }
-
-.quick-actions { padding:8px 24px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center; flex-shrink:0; }
-.quick-btn { padding:8px 16px; border-radius:20px; font-size:12px; font-weight:500; background:var(--card-bg); border:1px solid var(--card-border); color:var(--text-secondary); cursor:pointer; transition:all 0.2s; white-space:nowrap; }
-.quick-btn:hover { border-color:var(--sheikah-blue); color:var(--sheikah-blue); }
-
-.input-area { padding:12px 24px 20px; flex-shrink:0; }
-.input-row { display:flex; gap:10px; align-items:center; }
-.input-field { flex:1; padding:14px 20px; background:var(--panel-bg); border:1px solid var(--card-border); border-radius:28px; color:var(--text-primary); font-size:14px; outline:none; transition:border-color 0.2s; }
-.input-field:focus { border-color:var(--sheikah-blue); box-shadow:0 0 0 3px var(--sheikah-glow); }
-.input-field::placeholder { color:var(--text-muted); }
-.send-btn { width:48px; height:48px; border-radius:50%; background:var(--sheikah-blue); border:none; color:var(--dark-bg); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
-.send-btn:hover { background:#33ddff; transform:scale(1.05); }
-
-.typing { display:inline-flex; gap:4px; padding:4px 0; }
-.typing span { width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:blink 1.4s infinite; }
-.typing span:nth-child(2){animation-delay:0.2s;} .typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes blink { 0%,60%,100%{opacity:0.3;transform:translateY(0);} 30%{opacity:1;transform:translateY(-3px);} }
-
-@media(max-width:640px){.app{max-width:100%;}.chat-area{padding:12px 16px;}.input-area{padding:10px 16px 16px;}.item-card{min-width:170px;}}
+@media(max-width:640px){.app{max-width:100%;}.chat-area{padding:10px 14px;}.input-area{padding:10px 14px 18px;}.item-card{min-width:180px;}.header h1{font-size:18px;letter-spacing:3px;}.detail-hero,.detail-stats,.detail-section,.detail-map-section{padding-left:22px;padding-right:22px;}.minimap-wrap{padding:12px;}}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="boot">
+  <svg viewBox="0 0 100 100" fill="none"><ellipse cx="50" cy="50" rx="40" ry="23" stroke="#00d4ff" stroke-width="2" opacity=".7"/><ellipse cx="50" cy="50" rx="28" ry="16" stroke="#00d4ff" stroke-width="1" opacity=".3"/><circle cx="50" cy="50" r="13" stroke="#00d4ff" stroke-width="2" fill="rgba(0,212,255,.08)"/><circle cx="50" cy="50" r="6" fill="#00d4ff" opacity=".9"/><circle cx="50" cy="50" r="2.5" fill="#fff"/><line x1="50" y1="27" x2="50" y2="6" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="50" y1="73" x2="50" y2="94" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" opacity=".25"/><path d="M37 37 C32 30,22 28,12 32" stroke="#00d4ff" stroke-width="1" opacity=".3" fill="none"/><path d="M63 37 C68 30,78 28,88 32" stroke="#00d4ff" stroke-width="1" opacity=".3" fill="none"/></svg>
+  <div class="bb-w"><div class="bb" id="bb"></div></div>
+  <div class="bt">Linking to Purah Pad</div>
+</div>
+<div class="vignette"></div>
+<canvas id="particles"></canvas>
+<canvas id="runes"></canvas>
+
+<div class="app" id="app">
   <header class="header">
+    <svg class="sheikah-eye" viewBox="0 0 100 100" fill="none"><ellipse cx="50" cy="50" rx="38" ry="22" stroke="#00d4ff" stroke-width="2.5" opacity=".8"/><circle cx="50" cy="50" r="12" stroke="#00d4ff" stroke-width="2" fill="rgba(0,212,255,.08)"/><circle cx="50" cy="50" r="5" fill="#00d4ff" opacity=".9"/><circle cx="50" cy="50" r="2" fill="#fff" opacity=".9"/><line x1="50" y1="28" x2="50" y2="8" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="50" y1="72" x2="50" y2="92" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" opacity=".2"/><path d="M38 38 C33 33,25 30,15 33" stroke="#00d4ff" stroke-width="1" opacity=".35" fill="none"/><path d="M62 38 C67 33,75 30,85 33" stroke="#00d4ff" stroke-width="1" opacity=".35" fill="none"/></svg>
     <h1>Forest Dweller's Project</h1>
-    <div class="subtitle">Tears of the Kingdom — Companion</div>
+    <div class="sub">Tears of the Kingdom Companion</div>
+    <div class="hd"><div class="ln"></div><div class="tri"></div><div class="ln"></div></div>
   </header>
   <div class="chat-area" id="chat"></div>
-  <div class="quick-actions" id="quick-actions">
+  <div class="quick-actions" id="qa">
     <button class="quick-btn" data-q="How do I beat a Lynel?">Beat a Lynel</button>
     <button class="quick-btn" data-q="What's the strongest weapon?">Strongest weapon</button>
     <button class="quick-btn" data-q="Best armor for the Depths?">Depths armor</button>
     <button class="quick-btn" data-q="How do I build an Air Bike?">Air Bike build</button>
     <button class="quick-btn" data-q="Where can I find diamonds?">Find diamonds</button>
     <button class="quick-btn" data-q="Best early game weapons?">Early game tips</button>
+    <button class="quick-btn" data-q="How do I cook the best meals?">Cooking guide</button>
+    <button class="quick-btn" data-q="Tell me about the dragons">Dragons</button>
   </div>
-  <div class="input-area">
-    <div class="input-row">
-      <input type="text" class="input-field" id="input" placeholder="Ask me anything about Hyrule...">
-      <button class="send-btn" id="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
-    </div>
-  </div>
+  <div class="input-area"><div class="input-row">
+    <input type="text" class="input-field" id="input" placeholder="Ask me anything about Hyrule...">
+    <button class="send-btn" id="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+  </div></div>
 </div>
-<div class="detail-panel" id="detail-panel"><div class="detail-content" id="detail-content"></div></div>
+<div class="detail-panel" id="dp"><div class="detail-content" id="dc"></div></div>
 
 <script>
+/* ── BOOT ── */
+(function(){const b=document.getElementById('bb');const s=[15,35,55,75,90,100];let i=0;function n(){if(i>=s.length){setTimeout(()=>{document.getElementById('boot').classList.add('done');document.getElementById('app').classList.add('visible');},300);return;}b.style.width=s[i]+'%';i++;setTimeout(n,180+Math.random()*220);}setTimeout(n,400);})();
+
+/* ── PARTICLES + CONSTELLATIONS ── */
+(function(){const c=document.getElementById('particles'),x=c.getContext('2d');let W,H,pts=[];function rs(){W=c.width=innerWidth;H=c.height=innerHeight;}rs();addEventListener('resize',rs);const C=['0,212,255','167,139,250','245,200,66','124,252,0'];class P{constructor(){this.r(1);}r(init){this.x=Math.random()*W;this.y=init?Math.random()*H:H+20;this.s=Math.random()*2+.4;this.vy=-Math.random()*.25-.04;this.vx=(Math.random()-.5)*.12;this.o=Math.random()*.45+.05;this.ph=Math.random()*Math.PI*2;this.ps=Math.random()*.015+.004;this.c=C[Math.floor(Math.random()*C.length)];}u(){this.y+=this.vy;this.x+=this.vx+Math.sin(this.ph)*.08;this.ph+=this.ps;if(this.y<-15)this.r(0);}d(){const a=this.o*(.5+Math.sin(this.ph)*.5);x.beginPath();x.arc(this.x,this.y,this.s,0,Math.PI*2);x.fillStyle=`rgba(${this.c},${a})`;x.fill();if(this.s>1.3){x.beginPath();x.arc(this.x,this.y,this.s*4,0,Math.PI*2);x.fillStyle=`rgba(${this.c},${a*.12})`;x.fill();}}}const N=Math.min(70,Math.floor(W*H/18000));for(let i=0;i<N;i++)pts.push(new P());function f(){x.clearRect(0,0,W,H);for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){x.beginPath();x.moveTo(pts[i].x,pts[i].y);x.lineTo(pts[j].x,pts[j].y);x.strokeStyle=`rgba(0,212,255,${((110-d)/110)*.05})`;x.lineWidth=.5;x.stroke();}}pts.forEach(p=>{p.u();p.d();});requestAnimationFrame(f);}f();})();
+
+/* ── FLOATING RUNES ── */
+(function(){const c=document.getElementById('runes'),x=c.getContext('2d');let W,H;function rs(){W=c.width=innerWidth;H=c.height=innerHeight;}rs();addEventListener('resize',rs);const G=[(x,s)=>{x.beginPath();x.arc(0,0,s,0,Math.PI*2);x.moveTo(0,-s*1.6);x.lineTo(0,s*1.6);x.stroke();},(x,s)=>{x.beginPath();x.moveTo(-s,-s);x.lineTo(s,-s);x.lineTo(0,s*1.2);x.closePath();x.stroke();},(x,s)=>{x.beginPath();x.rect(-s*.7,-s*.7,s*1.4,s*1.4);x.moveTo(-s*.7,-s*.7);x.lineTo(s*.7,s*.7);x.moveTo(s*.7,-s*.7);x.lineTo(-s*.7,s*.7);x.stroke();},(x,s)=>{x.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/2;x.lineTo(Math.cos(a)*s,Math.sin(a)*s);}x.closePath();x.stroke();}];class R{constructor(){this.r(1);}r(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+40;this.vy=-Math.random()*.15-.02;this.rot=Math.random()*Math.PI*2;this.rs=(Math.random()-.5)*.003;this.sz=Math.random()*6+4;this.o=Math.random()*.08+.02;this.ph=Math.random()*Math.PI*2;this.g=G[Math.floor(Math.random()*G.length)];}u(){this.y+=this.vy;this.rot+=this.rs;this.ph+=.008;if(this.y<-50)this.r(0);}d(){const a=this.o*(.6+Math.sin(this.ph)*.4);x.save();x.translate(this.x,this.y);x.rotate(this.rot);x.strokeStyle=`rgba(0,212,255,${a})`;x.lineWidth=.8;this.g(x,this.sz);x.restore();}}const rns=[];const cnt=Math.min(18,Math.floor(W*H/65000));for(let i=0;i<cnt;i++)rns.push(new R());function f(){x.clearRect(0,0,W,H);rns.forEach(r=>{r.u();r.d();});requestAnimationFrame(f);}f();})();
+
+/* ══════════════════════════════════════
+   HYRULE MAP & REGIONS
+   ══════════════════════════════════════ */
+const REGIONS={
+  'hyrule-castle':{x:48,y:30,n:'Hyrule Castle'},
+  'lookout':{x:48,y:38,n:'Lookout Landing'},
+  'central':{x:48,y:35,n:'Central Hyrule'},
+  'zora':{x:72,y:28,n:"Zora's Domain"},
+  'goron':{x:65,y:14,n:'Goron City'},
+  'rito':{x:18,y:22,n:'Rito Village'},
+  'gerudo':{x:20,y:68,n:'Gerudo Town'},
+  'gerudo-high':{x:16,y:50,n:'Gerudo Highlands'},
+  'kakariko':{x:60,y:45,n:'Kakariko Village'},
+  'hateno':{x:80,y:50,n:'Hateno Village'},
+  'akkala':{x:80,y:12,n:'Akkala'},
+  'eldin':{x:68,y:10,n:'Eldin'},
+  'faron':{x:55,y:72,n:'Faron'},
+  'lanayru':{x:76,y:33,n:'Lanayru'},
+  'hebra':{x:15,y:12,n:'Hebra'},
+  'korok':{x:42,y:20,n:'Korok Forest'},
+  'depths':{x:48,y:52,n:'The Depths'},
+  'sky':{x:48,y:18,n:'Sky Islands'},
+  'lake-hylia':{x:40,y:60,n:'Lake Hylia'},
+  'tabantha':{x:15,y:32,n:'Tabantha'},
+  'everywhere':{x:48,y:42,n:'Found Across Hyrule'},
+  'light-dragon':{x:48,y:25,n:'Light Dragon (Circles Hyrule)'},
+  'dinraal-path':{x:66,y:12,n:'Dinraal Path (Eldin)'},
+  'naydra-path':{x:76,y:30,n:'Naydra Path (Lanayru)'},
+  'farosh-path':{x:45,y:65,n:'Farosh Path (Faron)'},
+};
+
+// Simplified Hyrule outline polygon (on 0-100 coordinate system)
+const HYRULE_OUTLINE="M10,8 L22,5 L35,7 L48,4 L60,3 L72,5 L82,8 L88,14 L86,24 L90,35 L88,48 L84,58 L78,67 L68,75 L58,78 L48,76 L38,72 L28,75 L18,78 L10,70 L6,58 L5,45 L7,32 L5,20 Z";
+
+// Major landmarks for map labels
+const LANDMARKS=[
+  {x:48,y:30,n:'Castle',s:7},{x:18,y:22,n:'Rito',s:6},{x:65,y:14,n:'Goron',s:6},
+  {x:72,y:28,n:'Zora',s:6},{x:80,y:12,n:'Akkala',s:6},{x:60,y:45,n:'Kakariko',s:6},
+  {x:20,y:68,n:'Gerudo',s:6},{x:55,y:72,n:'Faron',s:6},{x:42,y:20,n:'Korok',s:6},
+  {x:40,y:60,n:'Lake Hylia',s:5},{x:80,y:50,n:'Hateno',s:6},{x:15,y:12,n:'Hebra',s:6},
+];
+
+function renderMiniMap(items){
+  // Collect unique regions from items
+  const regionKeys=[...new Set(items.map(i=>i.r).filter(Boolean))];
+  if(!regionKeys.length||regionKeys.every(r=>r==='everywhere'))return '';
+
+  const markers=regionKeys.map(k=>REGIONS[k]).filter(Boolean);
+  if(!markers.length)return '';
+
+  // Build SVG
+  const W=460,H=360;
+  const sx=W/100,sy=H/100;
+
+  let svg=`<div class="minimap-wrap"><div class="minimap-title">📍 Location on Hyrule Map</div><svg class="minimap-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Background
+  svg+=`<rect width="${W}" height="${H}" fill="rgba(3,8,16,0.6)" rx="8"/>`;
+
+  // Grid lines
+  for(let i=0;i<=100;i+=20){
+    svg+=`<line x1="${i*sx}" y1="0" x2="${i*sx}" y2="${H}" stroke="rgba(0,212,255,0.04)" stroke-width="0.5"/>`;
+    svg+=`<line x1="0" y1="${i*sy}" x2="${W}" y2="${i*sy}" stroke="rgba(0,212,255,0.04)" stroke-width="0.5"/>`;
+  }
+
+  // Hyrule outline
+  const scaledOutline=HYRULE_OUTLINE.replace(/(\d+\.?\d*),(\d+\.?\d*)/g,(m,x,y)=>`${(x*sx).toFixed(1)},${(y*sy).toFixed(1)}`);
+  svg+=`<path d="${scaledOutline}" fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.12)" stroke-width="1.5" stroke-linejoin="round"/>`;
+
+  // Landmark labels
+  LANDMARKS.forEach(l=>{
+    svg+=`<text x="${l.x*sx}" y="${l.y*sy}" font-family="Inter,sans-serif" font-size="${l.s}" fill="rgba(148,163,184,0.25)" text-anchor="middle" dominant-baseline="middle">${l.n}</text>`;
+  });
+
+  // Marker dots with glow and labels
+  markers.forEach((m,i)=>{
+    const mx=m.x*sx, my=m.y*sy;
+    // Outer glow
+    svg+=`<circle cx="${mx}" cy="${my}" r="14" fill="rgba(0,212,255,0.08)">`;
+    svg+=`<animate attributeName="r" values="12;18;12" dur="2.5s" repeatCount="indefinite" begin="${i*0.3}s"/></circle>`;
+    // Mid glow
+    svg+=`<circle cx="${mx}" cy="${my}" r="7" fill="rgba(0,212,255,0.15)">`;
+    svg+=`<animate attributeName="opacity" values="0.15;0.3;0.15" dur="2s" repeatCount="indefinite" begin="${i*0.3}s"/></circle>`;
+    // Core dot
+    svg+=`<circle cx="${mx}" cy="${my}" r="4" fill="#00d4ff" opacity="0.9"/>`;
+    svg+=`<circle cx="${mx}" cy="${my}" r="2" fill="#ffffff" opacity="0.8"/>`;
+    // Label
+    const labelY=my-16;
+    svg+=`<text x="${mx}" y="${labelY}" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="#00d4ff" text-anchor="middle" opacity="0.9">${m.n}</text>`;
+  });
+
+  svg+=`</svg></div>`;
+  return svg;
+}
+
+function renderDetailMap(item){
+  if(!item.r||item.r==='everywhere')return '';
+  const m=REGIONS[item.r];
+  if(!m)return '';
+
+  const W=460,H=300;
+  const sx=W/100,sy=H/100;
+  const mx=m.x*sx, my=m.y*sy;
+
+  let svg=`<div class="detail-map-section"><div class="minimap-wrap"><div class="minimap-title">📍 Location</div><svg class="minimap-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  svg+=`<rect width="${W}" height="${H}" fill="rgba(3,8,16,0.6)" rx="8"/>`;
+  for(let i=0;i<=100;i+=20){
+    svg+=`<line x1="${i*sx}" y1="0" x2="${i*sx}" y2="${H}" stroke="rgba(0,212,255,0.04)" stroke-width="0.5"/>`;
+    svg+=`<line x1="0" y1="${i*sy}" x2="${W}" y2="${i*sy}" stroke="rgba(0,212,255,0.04)" stroke-width="0.5"/>`;
+  }
+  const so=HYRULE_OUTLINE.replace(/(\d+\.?\d*),(\d+\.?\d*)/g,(m,x,y)=>`${(x*sx).toFixed(1)},${(y*sy).toFixed(1)}`);
+  svg+=`<path d="${so}" fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.12)" stroke-width="1.5" stroke-linejoin="round"/>`;
+  LANDMARKS.forEach(l=>{svg+=`<text x="${l.x*sx}" y="${l.y*sy}" font-family="Inter,sans-serif" font-size="6" fill="rgba(148,163,184,0.2)" text-anchor="middle" dominant-baseline="middle">${l.n}</text>`;});
+  svg+=`<circle cx="${mx}" cy="${my}" r="16" fill="rgba(0,212,255,0.06)"><animate attributeName="r" values="14;22;14" dur="2.5s" repeatCount="indefinite"/></circle>`;
+  svg+=`<circle cx="${mx}" cy="${my}" r="8" fill="rgba(0,212,255,0.15)"><animate attributeName="opacity" values="0.15;0.35;0.15" dur="2s" repeatCount="indefinite"/></circle>`;
+  svg+=`<circle cx="${mx}" cy="${my}" r="5" fill="#00d4ff" opacity="0.9"/><circle cx="${mx}" cy="${my}" r="2.5" fill="#ffffff" opacity="0.8"/>`;
+  svg+=`<text x="${mx}" y="${my-20}" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#00d4ff" text-anchor="middle" opacity="0.9">${m.n}</text>`;
+  svg+=`</svg></div></div>`;
+  return svg;
+}
+
+/* ══════════════════════════════════════
+   DATABASE (with region keys)
+   ══════════════════════════════════════ */
 const DB={weapons:[
-{id:'w1',name:'Master Sword',sub:'One-Handed Sword',atk:30,rarity:'legendary',emoji:'🗡️',loc:'Light Dragon — ride it and pull the sword after recovering enough hearts (minimum 2 full stamina wheels recommended)',desc:'The legendary blade that seals the darkness. Never permanently breaks — recharges after 10 minutes. Shoots sword beams at full health. Deals +20 bonus damage against Gloom enemies.',fuse:'Light Dragon Horn Shard (+20 fuse attack) for 50 total sustained damage.'},
-{id:'w2',name:"Royal Guard's Claymore",sub:'Two-Handed Weapon',atk:32,rarity:'legendary',emoji:'⚔️',loc:"Hyrule Castle Sanctum — behind the throne, also in Princess Zelda's room chest",desc:'The single highest damage potential in the game. Its Breaking Point ability doubles all damage when the weapon is nearly broken. Combined with strong fuse materials, nothing hits harder.',fuse:'Silver Lynel Saber Horn (+55) = 87 base. Near breaking = ~160 damage per hit.'},
-{id:'w3',name:'Scimitar of the Seven',sub:'One-Handed Sword',atk:28,rarity:'legendary',emoji:'⚔️',loc:'Gerudo Town — reward from "Pride of the Gerudo" quest. Crafted with 4 Diamonds, 10 Flint, and a Gerudo Scimitar.',desc:'Doubles the power of any fused material, making it devastating with high-tier monster parts.',fuse:'Silver Lynel Saber Horn → 138 total attack power (doubled fusion).'},
-{id:'w4',name:'Lightscale Trident',sub:'Spear',atk:22,rarity:'legendary',emoji:'🔱',loc:"Zora's Domain — crafted by Dento. Requires 3 Diamonds, 5 Flint, and a Zora Spear.",desc:"Doubles attack power when Link is wet (rain, water, Sidon's ability). In the right conditions, becomes one of the most powerful weapons in the game.",fuse:'Silver Lynel Mace Horn when wet: 77-154 damage range.'},
-{id:'w5',name:'Savage Lynel Bow',sub:'Bow',atk:32,rarity:'rare',emoji:'🏹',loc:'Dropped by Silver and White-Maned Lynels in Gerudo Highlands and Lanayru Depths',desc:'Fires 3 arrows simultaneously for 96 total damage per shot. The ultimate ranged weapon.',fuse:'Bomb Flowers for triple explosive devastation.'},
-{id:'w6',name:'Hylian Shield',sub:'Shield',atk:0,def:90,rarity:'legendary',emoji:'🛡️',loc:'Hyrule Castle Docks — in the Lockup area. Light all braziers in the underground passage.',desc:'The highest defense shield in the game at 90. Virtually indestructible under normal use.',fuse:'Ruby for fire guard on parry, or Puffshroom for stealth smoke screen.'},
-{id:'w7',name:'Gloom Sword',sub:'One-Handed Sword',atk:41,rarity:'rare',emoji:'🗡️',loc:'Depths — dropped by Phantom Ganon encounters',desc:'Highest base attack one-handed sword at 41. Deals Gloom damage that can reduce max hearts.',fuse:null},
-{id:'w8',name:'Gloom Club',sub:'Two-Handed Weapon',atk:50,rarity:'rare',emoji:'🔨',loc:'Depths — Phantom Ganon encounters',desc:'The highest base attack of any melee weapon at 50. Massive Gloom-powered strikes.',fuse:null},
-{id:'w9',name:"Royal Guard's Bow",sub:'Bow',atk:50,rarity:'rare',emoji:'🏹',loc:'Hyrule Castle — various rooms and treasure chests',desc:'Highest single-shot bow damage at 50 per arrow. Best for precision shots.',fuse:null},
-{id:'w10',name:"Soldier's Broadsword",sub:'One-Handed Sword',atk:8,rarity:'common',emoji:'🗡️',loc:'Found everywhere — enemy camps, chests, Lookout Landing',desc:'Reliable early-game weapon. Common and easy to replace, perfect fusion base.',fuse:'Fuse with monster horns for easy early damage boost.'},
-{id:'w11',name:"Traveler's Sword",sub:'One-Handed Sword',atk:5,rarity:'common',emoji:'🗡️',loc:'Hyrule Field, Central Hyrule, Bokoblin Camps',desc:'The most basic sword. Great for learning fusion mechanics.'},
-{id:'w12',name:'Royal Broadsword',sub:'One-Handed Sword',atk:12,rarity:'uncommon',emoji:'🗡️',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Hyrulean royal guard weapon. Respawns in castle for reliable farming.'},
-{id:'w13',name:'Zora Sword',sub:'One-Handed Sword',atk:16,rarity:'uncommon',emoji:'🗡️',loc:"Zora's Domain area",desc:"Doubles damage when Link is wet. Pairs with rain or Sidon's water ability."},
-{id:'w14',name:'Gerudo Scimitar',sub:'One-Handed Sword',atk:17,rarity:'uncommon',emoji:'🗡️',loc:'Gerudo Desert — Koukot Plateau Cave, Ancient Altar Ruins',desc:'Doubles fused material attack power. Accessible version of the Scimitar of the Seven.'},
-{id:'w15',name:'Royal Claymore',sub:'Two-Handed Weapon',atk:20,rarity:'uncommon',emoji:'⚔️',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Respawning royal weapon. Good two-handed fusion base for mid-game.'},
-{id:'w16',name:'Boulder Breaker',sub:'Two-Handed Weapon',atk:40,rarity:'rare',emoji:'⚔️',loc:'Goron City — crafted after Yunobo quest. Needs Cobble Crusher + 5 Flint + 3 Diamonds.',desc:'Goron champion weapon. Massive damage, excellent against stone enemies. Re-craftable.'},
-{id:'w17',name:'Fierce Deity Sword',sub:'Two-Handed Weapon',atk:38,rarity:'legendary',emoji:'⚔️',loc:'Akkala region — available from Bargainer Statues for 160 Poes',desc:"Legendary weapon from Majora's Mask. Powerful two-handed with unique wild slash."},
-{id:'w18',name:'Gloom Spear',sub:'Spear',atk:40,rarity:'rare',emoji:'🔱',loc:'Depths — Phantom Ganon encounters',desc:'Strongest spear at 40 base attack. Fast spear strikes with Gloom power.'},
-{id:'w19',name:'Zora Spear',sub:'Spear',atk:9,rarity:'uncommon',emoji:'🔱',loc:"Zora's Domain",desc:'Doubles damage when wet. Essential crafting material for the Lightscale Trident.'},
-{id:'w20',name:'Royal Halberd',sub:'Spear',atk:26,rarity:'uncommon',emoji:'🔱',loc:'Hyrule Castle — respawns after Blood Moon',desc:'High-quality halberd with good reach. Reliable castle farm.'},
-{id:'w21',name:"Forest Dweller's Bow",sub:'Bow',atk:15,rarity:'uncommon',emoji:'🏹',loc:'Hyrule Forest, Korok Forest region',desc:'Fires 3 arrows per shot for 45 total. Great mid-game multi-shot bow.'},
-{id:'w22',name:'Royal Bow',sub:'Bow',atk:38,rarity:'uncommon',emoji:'🏹',loc:'Hyrule Castle — respawns after Blood Moon',desc:'High-powered single-shot bow. Excellent damage, reliable castle farm.'},
-{id:'w23',name:'Great Eagle Bow',sub:'Bow',atk:14,rarity:'legendary',emoji:'🏹',loc:'Rito Village — reward from Legacy of the Rito quest',desc:'Rito champion bow firing 3 arrows. Fast and graceful for aerial combat.'},
-{id:'w24',name:"Demon King's Bow",sub:'Bow',atk:50,rarity:'legendary',emoji:'🏹',loc:'Depths — reward from Demon King encounters',desc:'Scales with health — up to 50 damage at full hearts. The more hearts, the deadlier.'},
-{id:'w25',name:'Royal Shield',sub:'Shield',def:55,rarity:'uncommon',emoji:'🛡️',loc:'Hyrule Castle — Second Gatehouse turret',desc:'High-defense royal shield at 55. Excellent late-game choice before Hylian Shield.'},
-{id:'w26',name:'Savage Lynel Shield',sub:'Shield',def:62,rarity:'rare',emoji:'🛡️',loc:'Dropped by Silver and White-Maned Lynels',desc:'Second strongest shield at 62 defense. Dropped by toughest Lynels.'},
-{id:'w27',name:'Gloom Shield',sub:'Shield',def:50,rarity:'rare',emoji:'🛡️',loc:'Depths — Phantom Ganon encounters',desc:'Powerful Gloom-touched shield at 50 defense.'}
+{id:'w1',name:'Master Sword',sub:'One-Handed Sword',atk:30,rarity:'legendary',emoji:'🗡️',r:'light-dragon',loc:'Light Dragon — ride it and pull the sword after recovering enough hearts (minimum 2 full stamina wheels recommended)',desc:'The legendary blade that seals the darkness. Never permanently breaks — recharges after 10 minutes. Shoots sword beams at full health. Deals +20 bonus damage against Gloom enemies.',fuse:'Light Dragon Horn Shard (+20 fuse attack) for 50 total sustained damage.'},
+{id:'w2',name:"Royal Guard's Claymore",sub:'Two-Handed Weapon',atk:32,rarity:'legendary',emoji:'⚔️',r:'hyrule-castle',loc:"Hyrule Castle Sanctum — behind the throne, also in Princess Zelda's room chest",desc:'The single highest damage potential in the game. Its Breaking Point ability doubles all damage when the weapon is nearly broken.',fuse:'Silver Lynel Saber Horn (+55) = 87 base. Near breaking = ~160 damage per hit.'},
+{id:'w3',name:'Scimitar of the Seven',sub:'One-Handed Sword',atk:28,rarity:'legendary',emoji:'⚔️',r:'gerudo',loc:'Gerudo Town — reward from "Pride of the Gerudo" quest. Crafted with 4 Diamonds, 10 Flint, and a Gerudo Scimitar.',desc:'Doubles the power of any fused material, making it devastating with high-tier monster parts.',fuse:'Silver Lynel Saber Horn → 138 total attack power (doubled fusion).'},
+{id:'w4',name:'Lightscale Trident',sub:'Spear',atk:22,rarity:'legendary',emoji:'🔱',r:'zora',loc:"Zora's Domain — crafted by Dento. Requires 3 Diamonds, 5 Flint, and a Zora Spear.",desc:"Doubles attack power when Link is wet (rain, water, Sidon's ability).",fuse:'Silver Lynel Mace Horn when wet: 77-154 damage range.'},
+{id:'w5',name:'Savage Lynel Bow',sub:'Bow',atk:32,rarity:'rare',emoji:'🏹',r:'gerudo-high',loc:'Dropped by Silver and White-Maned Lynels in Gerudo Highlands and Lanayru Depths',desc:'Fires 3 arrows simultaneously for 96 total damage per shot.',fuse:'Bomb Flowers for triple explosive devastation.'},
+{id:'w6',name:'Hylian Shield',sub:'Shield',atk:0,def:90,rarity:'legendary',emoji:'🛡️',r:'hyrule-castle',loc:'Hyrule Castle Docks — in the Lockup area. Light all braziers in the underground passage.',desc:'The highest defense shield in the game at 90. Virtually indestructible under normal use.',fuse:'Ruby for fire guard on parry, or Puffshroom for stealth smoke screen.'},
+{id:'w7',name:'Gloom Sword',sub:'One-Handed Sword',atk:41,rarity:'rare',emoji:'🗡️',r:'depths',loc:'Depths — dropped by Phantom Ganon encounters',desc:'Highest base attack one-handed sword at 41. Deals Gloom damage.',fuse:null},
+{id:'w8',name:'Gloom Club',sub:'Two-Handed Weapon',atk:50,rarity:'rare',emoji:'🔨',r:'depths',loc:'Depths — Phantom Ganon encounters',desc:'The highest base attack of any melee weapon at 50.',fuse:null},
+{id:'w9',name:"Royal Guard's Bow",sub:'Bow',atk:50,rarity:'rare',emoji:'🏹',r:'hyrule-castle',loc:'Hyrule Castle — various rooms and treasure chests',desc:'Highest single-shot bow damage at 50 per arrow.',fuse:null},
+{id:'w10',name:"Soldier's Broadsword",sub:'One-Handed Sword',atk:8,rarity:'common',emoji:'🗡️',r:'everywhere',loc:'Found everywhere — enemy camps, chests, Lookout Landing',desc:'Reliable early-game weapon. Perfect fusion base.',fuse:'Fuse with monster horns for easy early damage boost.'},
+{id:'w11',name:"Traveler's Sword",sub:'One-Handed Sword',atk:5,rarity:'common',emoji:'🗡️',r:'central',loc:'Hyrule Field, Central Hyrule, Bokoblin Camps',desc:'The most basic sword. Great for learning fusion mechanics.'},
+{id:'w12',name:'Royal Broadsword',sub:'One-Handed Sword',atk:12,rarity:'uncommon',emoji:'🗡️',r:'hyrule-castle',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Respawns in castle for reliable farming.'},
+{id:'w13',name:'Zora Sword',sub:'One-Handed Sword',atk:16,rarity:'uncommon',emoji:'🗡️',r:'zora',loc:"Zora's Domain area",desc:"Doubles damage when Link is wet."},
+{id:'w14',name:'Gerudo Scimitar',sub:'One-Handed Sword',atk:17,rarity:'uncommon',emoji:'🗡️',r:'gerudo',loc:'Gerudo Desert — Koukot Plateau Cave, Ancient Altar Ruins',desc:'Doubles fused material attack power.'},
+{id:'w15',name:'Royal Claymore',sub:'Two-Handed Weapon',atk:20,rarity:'uncommon',emoji:'⚔️',r:'hyrule-castle',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Good two-handed fusion base for mid-game.'},
+{id:'w16',name:'Boulder Breaker',sub:'Two-Handed Weapon',atk:40,rarity:'rare',emoji:'⚔️',r:'goron',loc:'Goron City — crafted after Yunobo quest. Needs Cobble Crusher + 5 Flint + 3 Diamonds.',desc:'Goron champion weapon. Massive damage, re-craftable.'},
+{id:'w17',name:'Fierce Deity Sword',sub:'Two-Handed Weapon',atk:38,rarity:'legendary',emoji:'⚔️',r:'akkala',loc:'Akkala — available from Bargainer Statues for 160 Poes',desc:"Legendary weapon from Majora's Mask."},
+{id:'w18',name:'Gloom Spear',sub:'Spear',atk:40,rarity:'rare',emoji:'🔱',r:'depths',loc:'Depths — Phantom Ganon encounters',desc:'Strongest spear at 40 base attack.'},
+{id:'w19',name:'Zora Spear',sub:'Spear',atk:9,rarity:'uncommon',emoji:'🔱',r:'zora',loc:"Zora's Domain",desc:'Doubles damage when wet. Essential for crafting the Lightscale Trident.'},
+{id:'w20',name:'Royal Halberd',sub:'Spear',atk:26,rarity:'uncommon',emoji:'🔱',r:'hyrule-castle',loc:'Hyrule Castle — respawns after Blood Moon',desc:'Reliable castle farm.'},
+{id:'w21',name:"Forest Dweller's Bow",sub:'Bow',atk:15,rarity:'uncommon',emoji:'🏹',r:'korok',loc:'Hyrule Forest, Korok Forest region',desc:'Fires 3 arrows per shot for 45 total.'},
+{id:'w22',name:'Royal Bow',sub:'Bow',atk:38,rarity:'uncommon',emoji:'🏹',r:'hyrule-castle',loc:'Hyrule Castle — respawns after Blood Moon',desc:'High-powered single-shot bow.'},
+{id:'w23',name:'Great Eagle Bow',sub:'Bow',atk:14,rarity:'legendary',emoji:'🏹',r:'rito',loc:'Rito Village — reward from Legacy of the Rito quest',desc:'Rito champion bow firing 3 arrows.'},
+{id:'w24',name:"Demon King's Bow",sub:'Bow',atk:50,rarity:'legendary',emoji:'🏹',r:'depths',loc:'Depths — reward from Demon King encounters',desc:'Scales with health — up to 50 damage at full hearts.'},
+{id:'w25',name:'Royal Shield',sub:'Shield',def:55,rarity:'uncommon',emoji:'🛡️',r:'hyrule-castle',loc:'Hyrule Castle — Second Gatehouse turret',desc:'Excellent late-game choice before Hylian Shield.'},
+{id:'w26',name:'Savage Lynel Shield',sub:'Shield',def:62,rarity:'rare',emoji:'🛡️',r:'gerudo-high',loc:'Dropped by Silver and White-Maned Lynels',desc:'Second strongest shield at 62 defense.'},
+{id:'w27',name:'Gloom Shield',sub:'Shield',def:50,rarity:'rare',emoji:'🛡️',r:'depths',loc:'Depths — Phantom Ganon encounters',desc:'Powerful Gloom-touched shield at 50 defense.'}
 ],armor:[
-{id:'a1',name:'Barbarian Set',sub:'Attack Power',emoji:'⚔️',def:3,rarity:'legendary',loc:"Misko's Treasure quests — three separate treasure hunts across Hyrule",desc:'The premier combat armor. Each piece boosts attack power. Set bonus reduces charged attack stamina cost.',bonus:'Charge Attack Stamina Up',pieces:['Barbarian Helm','Barbarian Armor','Barbarian Leg Wraps']},
-{id:'a2',name:'Snowquill Set',sub:'Cold Resistance',emoji:'❄️',def:3,rarity:'uncommon',loc:'Rito Village armor shop — 1000 Rupees per piece',desc:'Essential for Hebra Mountains and all cold regions. At Level 2 upgrade, completely immune to freezing.',bonus:'Unfreezable',pieces:['Snowquill Headdress','Snowquill Tunic','Snowquill Tights']},
-{id:'a3',name:'Flamebreaker Set',sub:'Fire Resistance',emoji:'🔥',def:3,rarity:'uncommon',loc:'Goron City — Ripped and Shredded shop, 3300 Rupees total',desc:'Required for Death Mountain. Complete fire and burn immunity. Without it you catch fire in Eldin.',bonus:'Fireproof',pieces:['Flamebreaker Helm','Flamebreaker Armor','Flamebreaker Greaves']},
-{id:'a4',name:'Rubber Set',sub:'Shock Resistance',emoji:'⚡',def:3,rarity:'uncommon',loc:'Found near shrines: Toh Yahsa, Dag Ah Koh, Qukah Nata areas',desc:'Full electricity resistance. Complete set grants immunity to lightning strikes.',bonus:'Lightning Proof',pieces:['Rubber Helm','Rubber Suit','Rubber Tights']},
-{id:'a5',name:'Zora Set',sub:'Swim Speed',emoji:'🌊',def:3,rarity:'uncommon',loc:"Zora's Domain — quests and shops",desc:'Faster swimming, waterfall climbing, and reduced stamina drain while swim dashing.',bonus:'Swim Dash Stamina Up',pieces:['Zora Helm','Zora Armor','Zora Greaves']},
-{id:'a6',name:'Desert Voe Set',sub:'Heat Resistance',emoji:'🏜️',def:5,rarity:'uncommon',loc:'Gerudo Secret Club and Kara Kara Bazaar',desc:'Required for Gerudo Desert. Heat resistance plus shock damage resistance when fully equipped.',bonus:'Shock Damage Resist',pieces:['Desert Voe Headband','Desert Voe Spaulder','Desert Voe Trousers']},
-{id:'a7',name:'Glide Set',sub:'Sky Exploration',emoji:'🪂',def:2,rarity:'rare',loc:'Sky Island dive ceremonies and challenges',desc:'Fall damage completely negated with full set. Essential for Sky Island exploration.',bonus:'Impact Proof (no fall damage)',pieces:['Glide Mask','Glide Shirt','Glide Tights']},
-{id:'a8',name:'Climbing Set',sub:'Climbing Speed',emoji:'🧗',def:3,rarity:'uncommon',loc:'Various caves and mountain chests',desc:'Dramatically increases climbing speed and reduces stamina for climbing jumps.',bonus:'Climbing Jump Stamina Up',pieces:['Climbing Bandana','Climbing Gear','Climbing Boots']},
-{id:'a9',name:'Stealth Set',sub:'Stealth',emoji:'🥷',def:2,rarity:'uncommon',loc:'Kakariko Village — Enchanted armor shop',desc:'Maximum stealth for sneaking. Night Speed Up bonus increases movement after dark.',bonus:'Night Speed Up',pieces:['Stealth Mask','Stealth Chest Guard','Stealth Tights']},
-{id:'a10',name:'Depths Set',sub:'Gloom Protection',emoji:'🕳️',def:4,rarity:'rare',loc:'Depths — purchase from Bargainer Statues with Poes',desc:'Essential Depths armor. Protects hearts from Gloom damage underground.',bonus:'Gloom Attack Resist',pieces:['Depths Hood','Depths Tunic','Depths Greaves']},
-{id:'a11',name:"Ancient Hero's Aspect",sub:'Ultimate Armor',emoji:'👑',def:12,rarity:'legendary',loc:'Temple of Time — reward for completing ALL 152 Shrines',desc:'The ultimate endgame reward. Functions as all three pieces in one. Highest defense when fully upgraded.',bonus:'Master Sword Beam Up',pieces:['(Single piece — replaces all slots)']},
-{id:'a12',name:'Fierce Deity Set',sub:'Attack Power',emoji:'😈',def:3,rarity:'legendary',loc:'Skull Lake Cave, Cephla Lake Cave, Akkala Ancient Tech Lab ruins',desc:'Matches Barbarian Set with identical attack bonuses and Charge Attack Stamina Up.',bonus:'Charge Attack Stamina Up',pieces:['Fierce Deity Mask','Fierce Deity Armor','Fierce Deity Boots']},
-{id:'a13',name:'Dark Set',sub:'Depths Stealth',emoji:'🌑',def:3,rarity:'rare',loc:'Bargainer Statues in the Depths — 300, 150, and 200 Poes',desc:'Dark-themed armor for Depths navigation with Gloom resistance.',bonus:'Gloom Damage Resist',pieces:['Dark Hood','Dark Tunic','Dark Trousers']},
-{id:'a14',name:'Froggy Set',sub:'Rain Climbing',emoji:'🐸',def:3,rarity:'uncommon',loc:'Lucky Clover Gazette questline — complete newspaper side quests',desc:'Prevents slipping while climbing in rain. Game-changer in rainy regions.',bonus:'Slip Proof',pieces:['Froggy Helmet','Froggy Armor','Froggy Pants']},
-{id:'a15',name:'Zonaite Set',sub:'Energy Efficiency',emoji:'⚙️',def:4,rarity:'rare',loc:'Bargainer Statues in the Depths — purchased with Poes',desc:'Doubles battery recharge speed for all Zonai devices. Essential for builders.',bonus:'Energy Recharge Up',pieces:['Zonaite Helm','Zonaite Cuirass','Zonaite Shin Guards']},
-{id:'a16',name:'Radiant Set',sub:'Bone Attack',emoji:'💀',def:4,rarity:'uncommon',loc:'Kakariko Village — Enchanted armor shop',desc:'Glows in the dark, disguises as Stal enemy. Powers up bone weapon attacks.',bonus:'Bone Attack Up + Disguise',pieces:['Radiant Mask','Radiant Shirt','Radiant Tights']},
-{id:'a17',name:'Mystic Set',sub:'Rupee Protection',emoji:'💰',def:3,rarity:'rare',loc:'Various caves throughout Hyrule',desc:"Unique: lose Rupees instead of health when damaged. Effectively invincible if rich.",bonus:'Rupee Padding',pieces:['Mystic Helm','Mystic Armor','Mystic Greaves']},
-{id:'a18',name:'Ember Set',sub:'Hot Weather Attack',emoji:'🌋',def:4,rarity:'rare',loc:'Volcanic areas and fire-themed caves',desc:'Fire resistance plus attack boost in hot environments.',bonus:'Hot Weather Attack Up',pieces:['Ember Helm','Ember Armor','Ember Greaves']},
-{id:'a19',name:'Frostbite Set',sub:'Cold Weather Attack',emoji:'🧊',def:4,rarity:'rare',loc:'Cold regions and ice-themed caves',desc:'Boosts charge attack speed in cold weather. Turns Hebra into a combat playground.',bonus:'Cold Weather Charge Up',pieces:['Frostbite Helm','Frostbite Armor','Frostbite Greaves']},
-{id:'a20',name:'Charged Set',sub:'Storm Attack',emoji:'🌩️',def:4,rarity:'rare',loc:'Storm areas and electric-themed caves',desc:'Boosts charge attack power during thunderstorms.',bonus:'Stormy Weather Charge Up',pieces:['Charged Helm','Charged Armor','Charged Greaves']},
-{id:'a21',name:'Yiga Set',sub:'Infiltration',emoji:'🎭',def:3,rarity:'uncommon',loc:'Yiga Hideout infiltration side quests',desc:'Disguise as Yiga Clan member. Stealth bonuses for sneaky approaches.',bonus:'Stealth Up + Yiga Disguise',pieces:['Yiga Mask','Yiga Armor','Yiga Leg Wraps']},
-{id:'a22',name:'Hylian Set',sub:'Basic Armor',emoji:'🟢',def:3,rarity:'common',loc:"Lookout Landing — Mub's Shop, 70 Rupees per piece",desc:'The classic green tunic. Available early, solid basic defense.',bonus:'None',pieces:['Hylian Hood','Hylian Tunic','Hylian Trousers']},
-{id:'a23',name:"Soldier's Set",sub:'Basic Defense',emoji:'🔵',def:4,rarity:'common',loc:'Royal Hidden Passage beneath Hyrule Castle Field',desc:'Pure defense armor. Higher base defense than Hylian Set.',bonus:'None',pieces:["Soldier's Helm","Soldier's Armor","Soldier's Greaves"]},
-{id:'a24',name:"Miner's Set",sub:'Cave Navigation',emoji:'⛏️',def:4,rarity:'uncommon',loc:'Mining caves and underground shops',desc:'Creates glowing trail as you walk, illuminating dark caves.',bonus:'Luminous (glowing trail)',pieces:["Miner's Helm","Miner's Armor","Miner's Boots"]}
+{id:'a1',name:'Barbarian Set',sub:'Attack Power',emoji:'⚔️',def:3,rarity:'legendary',r:'everywhere',loc:"Misko's Treasure quests — three separate treasure hunts across Hyrule",desc:'The premier combat armor. Each piece boosts attack power.',bonus:'Charge Attack Stamina Up',pieces:['Barbarian Helm','Barbarian Armor','Barbarian Leg Wraps']},
+{id:'a2',name:'Snowquill Set',sub:'Cold Resistance',emoji:'❄️',def:3,rarity:'uncommon',r:'rito',loc:'Rito Village armor shop — 1000 Rupees per piece',desc:'Essential for Hebra Mountains and all cold regions.',bonus:'Unfreezable',pieces:['Snowquill Headdress','Snowquill Tunic','Snowquill Tights']},
+{id:'a3',name:'Flamebreaker Set',sub:'Fire Resistance',emoji:'🔥',def:3,rarity:'uncommon',r:'goron',loc:'Goron City — Ripped and Shredded shop, 3300 Rupees total',desc:'Required for Death Mountain.',bonus:'Fireproof',pieces:['Flamebreaker Helm','Flamebreaker Armor','Flamebreaker Greaves']},
+{id:'a4',name:'Rubber Set',sub:'Shock Resistance',emoji:'⚡',def:3,rarity:'uncommon',r:'everywhere',loc:'Found near shrines: Toh Yahsa, Dag Ah Koh, Qukah Nata areas',desc:'Complete set grants immunity to lightning strikes.',bonus:'Lightning Proof',pieces:['Rubber Helm','Rubber Suit','Rubber Tights']},
+{id:'a5',name:'Zora Set',sub:'Swim Speed',emoji:'🌊',def:3,rarity:'uncommon',r:'zora',loc:"Zora's Domain — quests and shops",desc:'Faster swimming, waterfall climbing.',bonus:'Swim Dash Stamina Up',pieces:['Zora Helm','Zora Armor','Zora Greaves']},
+{id:'a6',name:'Desert Voe Set',sub:'Heat Resistance',emoji:'🏜️',def:5,rarity:'uncommon',r:'gerudo',loc:'Gerudo Secret Club and Kara Kara Bazaar',desc:'Required for Gerudo Desert.',bonus:'Shock Damage Resist',pieces:['Desert Voe Headband','Desert Voe Spaulder','Desert Voe Trousers']},
+{id:'a7',name:'Glide Set',sub:'Sky Exploration',emoji:'🪂',def:2,rarity:'rare',r:'sky',loc:'Sky Island dive ceremonies and challenges',desc:'Fall damage completely negated.',bonus:'Impact Proof',pieces:['Glide Mask','Glide Shirt','Glide Tights']},
+{id:'a8',name:'Climbing Set',sub:'Climbing Speed',emoji:'🧗',def:3,rarity:'uncommon',r:'everywhere',loc:'Various caves and mountain chests',desc:'Dramatically increases climbing speed.',bonus:'Climbing Jump Stamina Up',pieces:['Climbing Bandana','Climbing Gear','Climbing Boots']},
+{id:'a9',name:'Stealth Set',sub:'Stealth',emoji:'🥷',def:2,rarity:'uncommon',r:'kakariko',loc:'Kakariko Village — Enchanted armor shop',desc:'Maximum stealth for sneaking.',bonus:'Night Speed Up',pieces:['Stealth Mask','Stealth Chest Guard','Stealth Tights']},
+{id:'a10',name:'Depths Set',sub:'Gloom Protection',emoji:'🕳️',def:4,rarity:'rare',r:'depths',loc:'Depths — purchase from Bargainer Statues with Poes',desc:'Essential Depths armor.',bonus:'Gloom Attack Resist',pieces:['Depths Hood','Depths Tunic','Depths Greaves']},
+{id:'a11',name:"Ancient Hero's Aspect",sub:'Ultimate Armor',emoji:'👑',def:12,rarity:'legendary',r:'central',loc:'Temple of Time — reward for completing ALL 152 Shrines',desc:'The ultimate endgame reward. Highest defense when fully upgraded.',bonus:'Master Sword Beam Up',pieces:['(Single piece — replaces all slots)']},
+{id:'a12',name:'Fierce Deity Set',sub:'Attack Power',emoji:'😈',def:3,rarity:'legendary',r:'akkala',loc:'Skull Lake Cave, Cephla Lake Cave, Akkala Ancient Tech Lab ruins',desc:'Identical attack bonuses to Barbarian Set.',bonus:'Charge Attack Stamina Up',pieces:['Fierce Deity Mask','Fierce Deity Armor','Fierce Deity Boots']},
+{id:'a13',name:'Dark Set',sub:'Depths Stealth',emoji:'🌑',def:3,rarity:'rare',r:'depths',loc:'Bargainer Statues in the Depths — 300, 150, and 200 Poes',desc:'Gloom resistance for Depths.',bonus:'Gloom Damage Resist',pieces:['Dark Hood','Dark Tunic','Dark Trousers']},
+{id:'a14',name:'Froggy Set',sub:'Rain Climbing',emoji:'🐸',def:3,rarity:'uncommon',r:'everywhere',loc:'Lucky Clover Gazette questline — complete newspaper side quests',desc:'Prevents slipping while climbing in rain.',bonus:'Slip Proof',pieces:['Froggy Helmet','Froggy Armor','Froggy Pants']},
+{id:'a15',name:'Zonaite Set',sub:'Energy Efficiency',emoji:'⚙️',def:4,rarity:'rare',r:'depths',loc:'Bargainer Statues in the Depths — purchased with Poes',desc:'Doubles battery recharge speed for all Zonai devices.',bonus:'Energy Recharge Up',pieces:['Zonaite Helm','Zonaite Cuirass','Zonaite Shin Guards']},
+{id:'a16',name:'Radiant Set',sub:'Bone Attack',emoji:'💀',def:4,rarity:'uncommon',r:'kakariko',loc:'Kakariko Village — Enchanted armor shop',desc:'Glows in the dark, disguises as Stal enemy.',bonus:'Bone Attack Up + Disguise',pieces:['Radiant Mask','Radiant Shirt','Radiant Tights']},
+{id:'a17',name:'Mystic Set',sub:'Rupee Protection',emoji:'💰',def:3,rarity:'rare',r:'everywhere',loc:'Various caves throughout Hyrule',desc:"Lose Rupees instead of health when damaged.",bonus:'Rupee Padding',pieces:['Mystic Helm','Mystic Armor','Mystic Greaves']},
+{id:'a18',name:'Ember Set',sub:'Hot Weather Attack',emoji:'🌋',def:4,rarity:'rare',r:'eldin',loc:'Volcanic areas and fire-themed caves',desc:'Attack boost in hot environments.',bonus:'Hot Weather Attack Up',pieces:['Ember Helm','Ember Armor','Ember Greaves']},
+{id:'a19',name:'Frostbite Set',sub:'Cold Weather Attack',emoji:'🧊',def:4,rarity:'rare',r:'hebra',loc:'Cold regions and ice-themed caves',desc:'Boosts charge attack speed in cold weather.',bonus:'Cold Weather Charge Up',pieces:['Frostbite Helm','Frostbite Armor','Frostbite Greaves']},
+{id:'a20',name:'Charged Set',sub:'Storm Attack',emoji:'🌩️',def:4,rarity:'rare',r:'everywhere',loc:'Storm areas and electric-themed caves',desc:'Boosts charge attack power during thunderstorms.',bonus:'Stormy Weather Charge Up',pieces:['Charged Helm','Charged Armor','Charged Greaves']},
+{id:'a21',name:'Yiga Set',sub:'Infiltration',emoji:'🎭',def:3,rarity:'uncommon',r:'gerudo',loc:'Yiga Hideout infiltration side quests',desc:'Disguise as Yiga Clan member.',bonus:'Stealth Up + Yiga Disguise',pieces:['Yiga Mask','Yiga Armor','Yiga Leg Wraps']},
+{id:'a22',name:'Hylian Set',sub:'Basic Armor',emoji:'🟢',def:3,rarity:'common',r:'lookout',loc:"Lookout Landing — Mub's Shop, 70 Rupees per piece",desc:'The classic green tunic.',bonus:'None',pieces:['Hylian Hood','Hylian Tunic','Hylian Trousers']},
+{id:'a23',name:"Soldier's Set",sub:'Basic Defense',emoji:'🔵',def:4,rarity:'common',r:'hyrule-castle',loc:'Royal Hidden Passage beneath Hyrule Castle Field',desc:'Pure defense armor.',bonus:'None',pieces:["Soldier's Helm","Soldier's Armor","Soldier's Greaves"]},
+{id:'a24',name:"Miner's Set",sub:'Cave Navigation',emoji:'⛏️',def:4,rarity:'uncommon',r:'depths',loc:'Mining caves and underground shops',desc:'Creates glowing trail as you walk.',bonus:'Luminous (glowing trail)',pieces:["Miner's Helm","Miner's Armor","Miner's Boots"]}
 ],materials:[
-{id:'m1',name:'Silver Lynel Saber Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:55,loc:'Silver Lynels — Gerudo Highlands, Deep Akkala, Lanayru Depths',desc:'The most powerful fuse material at +55 attack. Dropped by Silver Lynels.'},
-{id:'m2',name:'Silver Lynel Mace Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:44,loc:'Silver Lynels — same locations',desc:'Second strongest Lynel horn at +44. Creates spinning mace when fused.'},
-{id:'m3',name:'Diamond',sub:'Gem',emoji:'💎',rarity:'rare',loc:'Stone Talus drops, black ore deposits in caves, Goron City merchant (1000 rupees)',desc:'Most valuable gem. Needed for crafting legendary weapons: 4 for Scimitar, 3 for Trident, 3 for Boulder Breaker.'},
-{id:'m4',name:'Ruby',sub:'Gem',emoji:'🔴',rarity:'uncommon',loc:'Red ore deposits, Eldin caves, Stone Talus drops',desc:'Fire gem. Fuse for fire damage/arrows/shield guard. Sells for 110 rupees.'},
-{id:'m5',name:'Sapphire',sub:'Gem',emoji:'🔵',rarity:'uncommon',loc:'Blue ore deposits, Lanayru caves',desc:'Ice gem. Fuse for ice damage/arrows. Sells for 150 rupees.'},
-{id:'m6',name:'Topaz',sub:'Gem',emoji:'🟡',rarity:'uncommon',loc:'Yellow ore deposits, Faron and Gerudo caves',desc:'Electric gem. Fuse for shock damage/arrows. Sells for 80 rupees.'},
-{id:'m7',name:'Zonaite',sub:'Ore',emoji:'🟩',rarity:'uncommon',loc:'Depths — ore deposits everywhere underground',desc:'Zonai crafting currency. Trade at Forge Constructs for devices and charges.'},
-{id:'m8',name:'Large Zonaite',sub:'Ore',emoji:'🟩',rarity:'rare',loc:'Depths — larger deposits, Flux Construct drops',desc:'Premium Zonaite for better rewards. Farm Flux Constructs.'},
-{id:'m9',name:'Muddle Bud',sub:'Plant',emoji:'🌸',rarity:'uncommon',loc:'Caves and Depths — grows near dark water',desc:'Best tactical material. Fuse to arrows: enemies attack each other. Fuse to shields: confusion on block.'},
-{id:'m10',name:'Bomb Flower',sub:'Explosive',emoji:'💣',rarity:'uncommon',loc:'Goron City region, caves, Depths',desc:'Fuse to arrows for explosive shots. Essential for breaking ore and AoE damage.'},
-{id:'m11',name:'Puffshroom',sub:'Plant',emoji:'🍄',rarity:'common',loc:'Caves throughout Hyrule',desc:'Creates smoke cloud. Fuse to arrows/shields for stealth. Great escape tool.'},
-{id:'m12',name:'Light Dragon Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Light Dragon — land on its head, strike the horn. Circles Hyrule at high altitude.',desc:'Best Master Sword fusion at +20. Cooked: 30-minute buff. Dragon circles continuously.'},
-{id:'m13',name:'Dinraal Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Dinraal — fire dragon through Eldin Canyon and Akkala Highlands',desc:'Fire dragon horn. +20 fuse with fire element. Cooked: 30-min fire resistance.'},
-{id:'m14',name:'Naydra Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Naydra — ice dragon through Lanayru and Mount Lanayru',desc:'Ice dragon horn. +20 fuse with ice element. Cooked: 30-min cold resistance.'},
-{id:'m15',name:'Farosh Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',loc:'Farosh — electric dragon through Faron region and Lake Hylia',desc:'Electric dragon horn. +20 fuse with shock element. Cooked: 30-min shock resistance.'},
-{id:'m16',name:'Hearty Durian',sub:'Food',emoji:'🍈',rarity:'uncommon',loc:'Faron region — Faron Grasslands, near Lakeside Stable',desc:'Best healing food. Cooked alone: full recovery + bonus hearts. Stack 5 for massive overheal.'},
-{id:'m17',name:'Endura Carrot',sub:'Food',emoji:'🥕',rarity:'uncommon',loc:'Near Great Fairy Fountains and Satori Mountain',desc:'Cooked alone: full stamina recovery + temporary extra stamina.'},
-{id:'m18',name:'Star Fragment',sub:'Rare Material',emoji:'⭐',rarity:'rare',loc:'Falls from sky at night. Also Luminous Stone Talus drops.',desc:'Used for high-tier armor upgrades. Watch night sky from vantage points.'},
-{id:'m19',name:'Ancient Blade',sub:'Rare Material',emoji:'🔮',rarity:'legendary',loc:'Depths treasure chests or purchased with Poes',desc:'Fuse to arrow: instantly defeats any non-boss enemy. Save for emergencies.'}
+{id:'m1',name:'Silver Lynel Saber Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:55,r:'gerudo-high',loc:'Silver Lynels — Gerudo Highlands, Deep Akkala, Lanayru Depths',desc:'The most powerful fuse material at +55 attack.'},
+{id:'m2',name:'Silver Lynel Mace Horn',sub:'Monster Part',emoji:'🦁',rarity:'rare',fuseDmg:44,r:'gerudo-high',loc:'Silver Lynels — same locations',desc:'Second strongest Lynel horn at +44.'},
+{id:'m3',name:'Diamond',sub:'Gem',emoji:'💎',rarity:'rare',r:'everywhere',loc:'Stone Talus drops, black ore deposits in caves, Goron City merchant (1000 rupees)',desc:'Most valuable gem. Needed for crafting legendary weapons.'},
+{id:'m4',name:'Ruby',sub:'Gem',emoji:'🔴',rarity:'uncommon',r:'eldin',loc:'Red ore deposits, Eldin caves, Stone Talus drops',desc:'Fire gem. Sells for 110 rupees.'},
+{id:'m5',name:'Sapphire',sub:'Gem',emoji:'🔵',rarity:'uncommon',r:'lanayru',loc:'Blue ore deposits, Lanayru caves',desc:'Ice gem. Sells for 150 rupees.'},
+{id:'m6',name:'Topaz',sub:'Gem',emoji:'🟡',rarity:'uncommon',r:'faron',loc:'Yellow ore deposits, Faron and Gerudo caves',desc:'Electric gem. Sells for 80 rupees.'},
+{id:'m7',name:'Zonaite',sub:'Ore',emoji:'🟩',rarity:'uncommon',r:'depths',loc:'Depths — ore deposits everywhere underground',desc:'Zonai crafting currency.'},
+{id:'m8',name:'Large Zonaite',sub:'Ore',emoji:'🟩',rarity:'rare',r:'depths',loc:'Depths — larger deposits, Flux Construct drops',desc:'Premium Zonaite. Farm Flux Constructs.'},
+{id:'m9',name:'Muddle Bud',sub:'Plant',emoji:'🌸',rarity:'uncommon',r:'depths',loc:'Caves and Depths — grows near dark water',desc:'Fuse to arrows: enemies attack each other.'},
+{id:'m10',name:'Bomb Flower',sub:'Explosive',emoji:'💣',rarity:'uncommon',r:'goron',loc:'Goron City region, caves, Depths',desc:'Fuse to arrows for explosive shots.'},
+{id:'m11',name:'Puffshroom',sub:'Plant',emoji:'🍄',rarity:'common',r:'everywhere',loc:'Caves throughout Hyrule',desc:'Creates smoke cloud for stealth.'},
+{id:'m12',name:'Light Dragon Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',fuseDmg:20,r:'light-dragon',loc:'Light Dragon — land on its head, strike the horn.',desc:'Best Master Sword fusion at +20.'},
+{id:'m13',name:'Dinraal Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',fuseDmg:20,r:'dinraal-path',loc:'Dinraal — fire dragon through Eldin Canyon and Akkala Highlands',desc:'Fire dragon horn. +20 fuse with fire element.'},
+{id:'m14',name:'Naydra Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',fuseDmg:20,r:'naydra-path',loc:'Naydra — ice dragon through Lanayru and Mount Lanayru',desc:'Ice dragon horn. +20 fuse with ice element.'},
+{id:'m15',name:'Farosh Horn Shard',sub:'Dragon Part',emoji:'🐉',rarity:'legendary',fuseDmg:20,r:'farosh-path',loc:'Farosh — electric dragon through Faron region and Lake Hylia',desc:'Electric dragon horn. +20 fuse with shock element.'},
+{id:'m16',name:'Hearty Durian',sub:'Food',emoji:'🍈',rarity:'uncommon',r:'faron',loc:'Faron region — Faron Grasslands, near Lakeside Stable',desc:'Best healing food. Cooked alone: full recovery + bonus hearts.'},
+{id:'m17',name:'Endura Carrot',sub:'Food',emoji:'🥕',rarity:'uncommon',r:'everywhere',loc:'Near Great Fairy Fountains and Satori Mountain',desc:'Full stamina recovery + temporary extra stamina.'},
+{id:'m18',name:'Star Fragment',sub:'Rare Material',emoji:'⭐',rarity:'rare',r:'everywhere',loc:'Falls from sky at night. Also Luminous Stone Talus drops.',desc:'Used for high-tier armor upgrades.'},
+{id:'m19',name:'Ancient Blade',sub:'Rare Material',emoji:'🔮',rarity:'legendary',r:'depths',loc:'Depths treasure chests or purchased with Poes',desc:'Fuse to arrow: instantly defeats any non-boss enemy.'}
 ],builds:[
-{id:'b1',name:'Air Bike',sub:'S-Tier Vehicle',emoji:'🚁',rarity:'legendary',loc:'Build anywhere — 2 Fans + 1 Steering Stick from Zonai dispensers',desc:'The undisputed best vehicle. Two Fans at 45° with Steering Stick between them. Fast, efficient, stable. Save to Autobuild immediately.',components:'2× Fan (angled 45°) + 1× Steering Stick',difficulty:'Easy'},
-{id:'b2',name:'Flying Platform',sub:'A-Tier Vehicle',emoji:'🎈',rarity:'rare',loc:'Build anywhere — Balloons, Hover Stone, flat base',desc:'Simple hovering transport. Good for slow vertical ascent to Sky Islands.',components:'2× Balloon + 1× Hover Stone + Platform',difficulty:'Easy-Medium'},
-{id:'b3',name:'Battle Wagon',sub:'A-Tier Vehicle',emoji:'🛞',rarity:'rare',loc:'Build anywhere — Cart, Beam Emitters, Wheels, Steering Stick',desc:'Ground assault vehicle. Roll into camps with beam weapons blazing.',components:'Cart + 2× Beam Emitter + 4× Wheel + Steering Stick',difficulty:'Medium'},
-{id:'b4',name:'Rocket Sled',sub:'A-Tier Vehicle',emoji:'🚀',rarity:'rare',loc:'Build anywhere — Sled, Rockets, Steering Stick',desc:'Extreme speed ground vehicle. Insane acceleration, not very controllable but incredibly fun.',components:'Sled + 2× Rocket + Steering Stick',difficulty:'Medium'},
-{id:'b5',name:'Spring Launcher',sub:'B-Tier Utility',emoji:'🔧',rarity:'uncommon',loc:'Build anywhere — Springs + base',desc:'Step on Springs and launch skyward. Quick vertical access.',components:'2× Spring + Platform base',difficulty:'Easy'},
-{id:'b6',name:'Bomb Cart',sub:'B-Tier Utility',emoji:'💣',rarity:'uncommon',loc:'Build anywhere — Cart, Time Bombs',desc:'Automated explosive delivery. Point at camp, activate, watch from safety.',components:'Cart + 2× Time Bomb + Steering Stick',difficulty:'Easy'}
+{id:'b1',name:'Air Bike',sub:'S-Tier Vehicle',emoji:'🚁',rarity:'legendary',r:'everywhere',loc:'Build anywhere — 2 Fans + 1 Steering Stick from Zonai dispensers',desc:'The undisputed best vehicle. Two Fans at 45° with Steering Stick between them.',components:'2× Fan (angled 45°) + 1× Steering Stick',difficulty:'Easy'},
+{id:'b2',name:'Flying Platform',sub:'A-Tier Vehicle',emoji:'🎈',rarity:'rare',r:'everywhere',loc:'Build anywhere — Balloons, Hover Stone, flat base',desc:'Simple hovering transport for Sky Islands.',components:'2× Balloon + 1× Hover Stone + Platform',difficulty:'Easy-Medium'},
+{id:'b3',name:'Battle Wagon',sub:'A-Tier Vehicle',emoji:'🛞',rarity:'rare',r:'everywhere',loc:'Build anywhere — Cart, Beam Emitters, Wheels, Steering Stick',desc:'Ground assault vehicle.',components:'Cart + 2× Beam Emitter + 4× Wheel + Steering Stick',difficulty:'Medium'},
+{id:'b4',name:'Rocket Sled',sub:'A-Tier Vehicle',emoji:'🚀',rarity:'rare',r:'everywhere',loc:'Build anywhere — Sled, Rockets, Steering Stick',desc:'Extreme speed, not very controllable but incredibly fun.',components:'Sled + 2× Rocket + Steering Stick',difficulty:'Medium'},
+{id:'b5',name:'Spring Launcher',sub:'B-Tier Utility',emoji:'🔧',rarity:'uncommon',r:'everywhere',loc:'Build anywhere — Springs + base',desc:'Quick vertical access.',components:'2× Spring + Platform base',difficulty:'Easy'},
+{id:'b6',name:'Bomb Cart',sub:'B-Tier Utility',emoji:'💣',rarity:'uncommon',r:'everywhere',loc:'Build anywhere — Cart, Time Bombs',desc:'Automated explosive delivery.',components:'Cart + 2× Time Bomb + Steering Stick',difficulty:'Easy'}
 ]};
 
 const ALL=[...DB.weapons,...DB.armor,...DB.materials,...DB.builds];
 function itemType(item){if(DB.weapons.includes(item))return'weapon';if(DB.armor.includes(item))return'armor';if(DB.materials.includes(item))return'material';return'zonai';}
 
-function renderCard(item){const t=itemType(item);const a=item.atk?`<div class="card-stat atk"><span class="val">${item.atk}</span> ATK</div>`:'';const d=item.def?`<div class="card-stat def"><span class="val">${item.def}</span> DEF</div>`:'';const f=item.fuseDmg?`<div class="card-stat atk"><span class="val">+${item.fuseDmg}</span> FUSE</div>`:'';return`<div class="item-card" onclick="showDetail('${item.id}')"><div class="card-img ${t}"><div class="bg-glow"></div><span>${item.emoji||'📦'}</span></div><div class="card-body"><div class="card-name">${item.name}</div><div class="card-type">${item.sub}</div><div class="card-stats">${a}${d}${f}<span class="card-rarity ${item.rarity}">${item.rarity}</span></div></div></div>`;}
+function imgPath(item){return`img/${item.id}.png`;}
+function imgTag(item,cls){
+  const src=imgPath(item);
+  const fb=item.emoji||'📦';
+  return`<img src="${src}" alt="${item.name}" onerror="this.outerHTML='<span${cls?' class=&quot;'+cls+'&quot;':''}>${fb}</span>'" loading="lazy">`;
+}
+
+function renderCard(item){
+  const t=itemType(item);
+  const a=item.atk?`<div class="card-stat atk"><span class="val">${item.atk}</span> ATK</div>`:'';
+  const d=item.def?`<div class="card-stat def"><span class="val">${item.def}</span> DEF</div>`:'';
+  const f=item.fuseDmg?`<div class="card-stat atk"><span class="val">+${item.fuseDmg}</span> FUSE</div>`:'';
+  const visual=imgTag(item);
+  return`<div class="item-card ${item.rarity}-card" onclick="showDetail('${item.id}')"><div class="card-img ${t}"><div class="bg-glow"></div>${visual}</div><div class="card-body"><div class="card-name">${item.name}</div><div class="card-type">${item.sub}</div><div class="card-stats">${a}${d}${f}<span class="card-rarity ${item.rarity}">${item.rarity}</span></div></div></div>`;
+}
 function renderCards(items){if(!items.length)return'';return`<div class="cards-row">${items.map(renderCard).join('')}</div>`;}
 
-function showDetail(id){const item=ALL.find(i=>i.id===id);if(!item)return;let s='';if(item.atk)s+=`<div class="detail-stat-box"><div class="val atk">${item.atk}</div><div class="lbl">Attack</div></div>`;if(item.def)s+=`<div class="detail-stat-box"><div class="val def">${item.def}</div><div class="lbl">Defense</div></div>`;if(item.fuseDmg)s+=`<div class="detail-stat-box"><div class="val atk">+${item.fuseDmg}</div><div class="lbl">Fuse Bonus</div></div>`;if(item.bonus)s+=`<div class="detail-stat-box"><div class="val gold" style="font-size:14px">${item.bonus}</div><div class="lbl">Set Bonus</div></div>`;let p=item.pieces?`<div class="detail-section"><h4>Pieces</h4><p>${item.pieces.join(' · ')}</p></div>`:'';let fu=item.fuse?`<div class="detail-section"><h4>Best Fusion</h4><div class="detail-fuse">💡 ${item.fuse}</div></div>`:'';let co=item.components?`<div class="detail-section"><h4>Components</h4><p>${item.components}</p></div>`:'';document.getElementById('detail-content').innerHTML=`<div class="detail-top"><div class="detail-emoji">${item.emoji||'📦'}</div><div class="detail-info"><h2>${item.name}</h2><div class="detail-sub">${item.sub}</div></div><button class="detail-close" onclick="closeDetail()">✕</button></div>${s?`<div class="detail-stats-row">${s}</div>`:''}<div class="detail-section"><h4>Description</h4><p>${item.desc}</p></div><div class="detail-section"><h4>Where to Find</h4><div class="detail-location"><span class="pin">📍</span><div class="loc-text">${item.loc}</div></div></div>${fu}${p}${co}`;document.getElementById('detail-panel').classList.add('open');}
-function closeDetail(){document.getElementById('detail-panel').classList.remove('open');}
-document.getElementById('detail-panel').addEventListener('click',e=>{if(e.target.id==='detail-panel')closeDetail();});
+function showDetail(id){
+  const item=ALL.find(i=>i.id===id);if(!item)return;
+  const maxA=55,maxD=90;let s='';
+  if(item.atk){const p=Math.min(100,Math.round(item.atk/maxA*100));s+=`<div class="stat-box atk-box"><span class="stat-val atk">${item.atk}</span><div class="stat-lbl">Attack</div><div class="stat-bar-wrap"><div class="stat-bar atk" data-w="${p}%"></div></div></div>`;}
+  if(item.def){const p=Math.min(100,Math.round(item.def/maxD*100));s+=`<div class="stat-box def-box"><span class="stat-val def">${item.def}</span><div class="stat-lbl">Defense</div><div class="stat-bar-wrap"><div class="stat-bar def" data-w="${p}%"></div></div></div>`;}
+  if(item.fuseDmg)s+=`<div class="stat-box atk-box"><span class="stat-val atk">+${item.fuseDmg}</span><div class="stat-lbl">Fuse Bonus</div><div class="stat-bar-wrap"><div class="stat-bar atk" data-w="${Math.min(100,Math.round(item.fuseDmg/55*100))}%"></div></div></div>`;
+  if(item.bonus)s+=`<div class="stat-box gold-box"><span class="stat-val gold" style="font-size:13px">${item.bonus}</span><div class="stat-lbl">Set Bonus</div></div>`;
+  const gc=item.rarity==='legendary'?'245,200,66':item.rarity==='rare'?'167,139,250':'0,212,255';
+  let p=item.pieces?`<div class="detail-section"><h4>Pieces</h4><p>${item.pieces.join(' · ')}</p></div>`:'';
+  let fu=item.fuse?`<div class="detail-section"><h4>Best Fusion</h4><div class="detail-fuse">💡 ${item.fuse}</div></div>`:'';
+  let co=item.components?`<div class="detail-section"><h4>Components</h4><p>${item.components}</p></div>`:'';
+  const dm=renderDetailMap(item);
+  const dc=document.getElementById('dc');
+  dc.className=`detail-content ${item.rarity}-detail`;
+  const detailVisual=imgTag(item,'detail-emoji');
+  dc.innerHTML=`<div class="detail-hero"><div class="detail-emoji-wrap"><div class="glow" style="background:rgba(${gc},.3)"></div>${detailVisual}</div><div class="detail-info"><h2>${item.name}</h2><div class="detail-sub">${item.sub}</div></div><button class="detail-close" onclick="closeDetail()">✕</button></div>${s?`<div class="detail-stats">${s}</div>`:''}<div class="detail-section"><h4>Description</h4><p>${item.desc}</p></div><div class="detail-section"><h4>Where to Find</h4><div class="detail-loc"><span class="pin">📍</span><div class="loc-text">${item.loc}</div></div></div>${dm}${fu}${p}${co}`;
+  document.getElementById('dp').classList.add('open');
+  requestAnimationFrame(()=>{dc.querySelectorAll('.stat-bar[data-w]').forEach(b=>{requestAnimationFrame(()=>{b.style.width=b.dataset.w;});});});
+}
+function closeDetail(){document.getElementById('dp').classList.remove('open');}
+document.getElementById('dp').addEventListener('click',e=>{if(e.target.id==='dp')closeDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail();});
 
 function match(t,kw){return kw.some(k=>t.includes(k));}
 function findItems(names){return names.map(n=>ALL.find(i=>i.name.toLowerCase()===n.toLowerCase())).filter(Boolean);}
 
 function findResponse(q){const ql=q.toLowerCase();
-if(match(ql,['lynel','beat','fight','kill'])){return{text:`Lynels are the toughest enemies in Hyrule. For melee, use <strong>Flurry Rush</strong> — dodge at the last moment. Wear the <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> for attack boosts, with a weapon fused with a strong horn (+30 or higher). For ranged, headshot to stun, then mount the Lynel and attack from its back — this doesn't consume weapon durability. Bring <span class="hl">Hearty Durian</span> meals for full recovery. After defeating them, they drop the best horns and bows in the game.`,cards:findItems(['barbarian set','savage lynel bow','master sword','silver lynel saber horn','fierce deity set'])};}
-if(match(ql,['strongest','best weapon','most powerful','highest damage'])){return{text:`The <span class="hl">Royal Guard's Claymore</span> fused with a <span class="hl">Silver Lynel Saber Horn</span> reaches 87 attack — and its Breaking Point doubles that to roughly <span class="hl">160 damage per hit</span> when nearly broken. For one-handed, the <span class="hl">Scimitar of the Seven</span> doubles fusion power, reaching 138. The <span class="hl">Gloom Club</span> has highest raw base at 50. And the <span class="hl">Master Sword</span> never breaks, making it the best sustained weapon.`,cards:findItems(["royal guard's claymore",'scimitar of the seven','master sword','gloom club'])};}
-if(match(ql,['early game','beginning','start','first'])){return{text:`Grab every <span class="hl">Soldier's Broadsword</span> you find and fuse with Bokoblin Horns. Buy the <span class="hl">Hylian Set</span> at Lookout Landing for 210 rupees total. Collect <span class="hl">Bomb Flowers</span> and <span class="hl">Puffshrooms</span> from caves — they're game-changers. Don't hoard weapons, fuse everything. Visit the Great Sky Island shrines first for Ultrahand, Fuse, and Ascend.`,cards:findItems(["soldier's broadsword",'hylian set','bomb flower','puffshroom'])};}
-if(match(ql,['depths','underground','deep','gloom'])){return{text:`Wear the <span class="hl">Depths Set</span> (buy with Poes at Bargainer Statues) for Gloom resistance. Without it, max hearts shrink permanently until surface. Throw Brightbloom Seeds constantly. <span class="hl">Gloom weapons</span> (41-50 attack) are powerful but risky. Farm <span class="hl">Zonaite</span> while underground. Save <span class="hl">Ancient Blades</span> for emergencies — they one-shot any non-boss.`,cards:findItems(['depths set','dark set','gloom sword','gloom club','zonaite','ancient blade'])};}
-if(match(ql,['air bike','fly','vehicle','build'])){return{text:`The <span class="hl">Air Bike</span> is the best vehicle. 2 Fans at 45° + Steering Stick between them. Fast, efficient, stable. Save to <strong>Autobuild</strong> immediately. The <span class="hl">Flying Platform</span> for slow vertical ascent, <span class="hl">Rocket Sled</span> for insane speed, <span class="hl">Battle Wagon</span> for rolling into camps with beam weapons.`,cards:findItems(['air bike','flying platform','rocket sled','battle wagon'])};}
-if(match(ql,['diamond','gem','rupee','money'])){return{text:`<span class="hl">Diamonds</span> drop from Stone Taluses (especially Rare variants), from black ore deposits in caves (Eldin and Gerudo), and Goron City merchant for 1000 rupees. You need them for legendary weapons: 4 for Scimitar, 3 each for Trident and Boulder Breaker. For rupees, sell gems: Diamonds (500), Sapphires (150), Rubies (110). Farm Stone Taluses after Blood Moon.`,cards:findItems(['diamond','ruby','sapphire','topaz'])};}
-if(match(ql,['armor','best armor','combat armor','defence','defense'])){return{text:`For combat: <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> — Attack Up + Charge Stamina Up. For Depths: <span class="hl">Depths Set</span> is essential. For Sky Islands: <span class="hl">Glide Set</span> with zero fall damage. Endgame: <span class="hl">Ancient Hero's Aspect</span> from all 152 shrines — highest defense in the game.`,cards:findItems(['barbarian set','fierce deity set','depths set','glide set',"ancient hero's aspect"])};}
-if(match(ql,['fusion','fuse','attach','combine'])){return{text:`Strongest fuse material: <span class="hl">Silver Lynel Saber Horn</span> at +55. Tactical: <span class="hl">Muddle Buds</span> make enemies fight each other, <span class="hl">Bomb Flowers</span> create explosive arrows, gems add elements. Key: some weapons <em>multiply</em> fusion power — Scimitar of the Seven and Gerudo Scimitar both double it. <span class="hl">Dragon Horn Shards</span> add +20 each with elements.`,cards:findItems(['silver lynel saber horn','muddle bud','bomb flower','light dragon horn shard'])};}
-if(match(ql,['cook','food','recipe','heal','hearts','stamina'])){return{text:`<span class="hl">Hearty Durian</span> (Faron region) cooked alone: full recovery + bonus hearts. <span class="hl">Endura Carrot</span> (near Great Fairy Fountains) cooked alone: full stamina recovery + bonus. Cook single high-value ingredients, not mixtures. Cook during Blood Moon for critical success. Five Hearty Durians = full recovery + 20 bonus hearts.`,cards:findItems(['hearty durian','endura carrot'])};}
-if(match(ql,['dragon','dinraal','naydra','farosh','light dragon'])){return{text:`Four dragons on set paths. <span class="hl">Light Dragon</span> circles all Hyrule at high altitude. <span class="hl">Dinraal</span> (fire) through Eldin/Akkala. <span class="hl">Naydra</span> (ice) through Lanayru. <span class="hl">Farosh</span> (electric) through Faron/Lake Hylia. Land on their back, climb to horn, strike. Each horn gives +20 fuse attack + element, and cooks into 30-minute resistance buff.`,cards:findItems(['light dragon horn shard','dinraal horn shard','naydra horn shard','farosh horn shard'])};}
-if(match(ql,['shrine','152','blessing'])){return{text:`<span class="hl">152 shrines</span> total: 120 surface, 32 sky. Each gives one Light of Blessing — trade 4 at Goddess Statues for a heart or stamina upgrade. Types: puzzle, combat, Proving Grounds (lose equipment), Rauru's Blessing (challenge is finding it). Complete all 152 for the <span class="hl">Ancient Hero's Aspect</span>. Use Shrine Sensor from Hateno Research Lab.`,cards:findItems(["ancient hero's aspect"])};}
-if(match(ql,['zonai','device','battery','energy'])){return{text:`Get Zonai Devices from dispensers on Sky Islands and in Depths. <span class="hl">Zonaite Set</span> doubles battery recharge — essential for builders. Farm <span class="hl">Zonaite</span> in the Depths. Key devices: Fans (flight), Wheels (ground), Rockets (speed), Beam Emitters (combat), Springs (launch). Learn the <span class="hl">Air Bike</span> first.`,cards:findItems(['zonaite set','air bike','zonaite','large zonaite'])};}
-const nameMatch=ALL.filter(i=>i.name.toLowerCase().includes(ql)||ql.includes(i.name.toLowerCase()));
-if(nameMatch.length>0){const item=nameMatch[0];let t=`<span class="hl">${item.name}</span> — ${item.desc}`;if(item.fuse)t+=`<br><br><strong>Best Fusion:</strong> ${item.fuse}`;if(item.components)t+=`<br><br><strong>Components:</strong> ${item.components}`;if(item.bonus)t+=`<br><br><strong>Set Bonus:</strong> ${item.bonus}`;if(item.pieces)t+=`<br><br><strong>Pieces:</strong> ${item.pieces.join(' · ')}`;return{text:t,cards:nameMatch.slice(0,5)};}
-const results=ALL.filter(i=>{const h=`${i.name} ${i.sub} ${i.desc} ${i.loc||''} ${i.bonus||''} ${i.fuse||''}`.toLowerCase();return ql.split(/\s+/).some(w=>w.length>2&&h.includes(w));});
-if(results.length>0)return{text:`Here's what I found:`,cards:results.slice(0,6)};
-return{text:`I don't have that yet — the knowledge base is growing. Try asking about weapons, armor, materials, builds, cooking, dragons, shrines, or combat tips like "How do I beat a Lynel?"`,cards:[]};}
+if(match(ql,['lynel','beat','fight','kill'])){const c=findItems(['barbarian set','savage lynel bow','master sword','silver lynel saber horn','fierce deity set']);return{text:`Lynels are the toughest enemies in Hyrule. For melee, use <strong>Flurry Rush</strong> — dodge at the last moment. Wear the <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> for attack boosts, with a weapon fused with a strong horn (+30 or higher). For ranged, headshot to stun, then mount the Lynel and attack from its back — this doesn't consume weapon durability. Bring <span class="hl">Hearty Durian</span> meals for full recovery.`,cards:c};}
+if(match(ql,['strongest','best weapon','most powerful','highest damage'])){const c=findItems(["royal guard's claymore",'scimitar of the seven','master sword','gloom club']);return{text:`The <span class="hl">Royal Guard's Claymore</span> fused with a <span class="hl">Silver Lynel Saber Horn</span> reaches 87 attack — and its Breaking Point doubles that to roughly <span class="hl">160 damage per hit</span> when nearly broken. For one-handed, the <span class="hl">Scimitar of the Seven</span> doubles fusion power, reaching 138. The <span class="hl">Gloom Club</span> has highest raw base at 50. And the <span class="hl">Master Sword</span> never breaks, making it the best sustained weapon.`,cards:c};}
+if(match(ql,['early game','beginning','start','first'])){const c=findItems(["soldier's broadsword",'hylian set','bomb flower','puffshroom']);return{text:`Grab every <span class="hl">Soldier's Broadsword</span> you find and fuse with Bokoblin Horns. Buy the <span class="hl">Hylian Set</span> at Lookout Landing for 210 rupees total. Collect <span class="hl">Bomb Flowers</span> and <span class="hl">Puffshrooms</span> from caves — they're game-changers. Don't hoard weapons, fuse everything.`,cards:c};}
+if(match(ql,['depths','underground','deep','gloom'])){const c=findItems(['depths set','dark set','gloom sword','gloom club','zonaite','ancient blade']);return{text:`Wear the <span class="hl">Depths Set</span> (buy with Poes at Bargainer Statues) for Gloom resistance. Without it, max hearts shrink permanently until surface. Throw Brightbloom Seeds constantly. <span class="hl">Gloom weapons</span> (41-50 attack) are powerful but risky. Farm <span class="hl">Zonaite</span> while underground. Save <span class="hl">Ancient Blades</span> for emergencies — they one-shot any non-boss.`,cards:c};}
+if(match(ql,['air bike','fly','vehicle','build'])){const c=findItems(['air bike','flying platform','rocket sled','battle wagon']);return{text:`The <span class="hl">Air Bike</span> is the best vehicle. 2 Fans at 45° + Steering Stick between them. Save to <strong>Autobuild</strong> immediately. The <span class="hl">Flying Platform</span> for slow vertical ascent, <span class="hl">Rocket Sled</span> for insane speed, <span class="hl">Battle Wagon</span> for rolling into camps with beam weapons.`,cards:c};}
+if(match(ql,['diamond','gem','rupee','money'])){const c=findItems(['diamond','ruby','sapphire','topaz']);return{text:`<span class="hl">Diamonds</span> drop from Stone Taluses (especially Rare variants), from black ore deposits in caves (Eldin and Gerudo), and Goron City merchant for 1000 rupees. You need them for legendary weapons: 4 for Scimitar, 3 each for Trident and Boulder Breaker. For rupees, sell gems: Diamonds (500), Sapphires (150), Rubies (110).`,cards:c};}
+if(match(ql,['armor','best armor','combat armor','defence','defense'])){const c=findItems(['barbarian set','fierce deity set','depths set','glide set',"ancient hero's aspect"]);return{text:`For combat: <span class="hl">Barbarian Set</span> or <span class="hl">Fierce Deity Set</span> — Attack Up + Charge Stamina Up. For Depths: <span class="hl">Depths Set</span> is essential. For Sky Islands: <span class="hl">Glide Set</span> with zero fall damage. Endgame: <span class="hl">Ancient Hero's Aspect</span> from all 152 shrines — highest defense in the game.`,cards:c};}
+if(match(ql,['fusion','fuse','attach','combine'])){const c=findItems(['silver lynel saber horn','muddle bud','bomb flower','light dragon horn shard']);return{text:`Strongest fuse material: <span class="hl">Silver Lynel Saber Horn</span> at +55. Tactical: <span class="hl">Muddle Buds</span> make enemies fight each other, <span class="hl">Bomb Flowers</span> create explosive arrows, gems add elements. Some weapons <em>multiply</em> fusion power — Scimitar of the Seven and Gerudo Scimitar both double it.`,cards:c};}
+if(match(ql,['cook','food','recipe','heal','hearts','stamina','meal'])){const c=findItems(['hearty durian','endura carrot']);return{text:`<span class="hl">Hearty Durian</span> (Faron region) cooked alone: full recovery + bonus hearts. <span class="hl">Endura Carrot</span> (near Great Fairy Fountains) cooked alone: full stamina recovery + bonus. Cook single high-value ingredients, not mixtures. Cook during Blood Moon for critical success. Five Hearty Durians = full recovery + 20 bonus hearts.`,cards:c};}
+if(match(ql,['dragon','dinraal','naydra','farosh','light dragon'])){const c=findItems(['light dragon horn shard','dinraal horn shard','naydra horn shard','farosh horn shard']);return{text:`Four dragons on set paths. <span class="hl">Light Dragon</span> circles all Hyrule at high altitude. <span class="hl">Dinraal</span> (fire) through Eldin/Akkala. <span class="hl">Naydra</span> (ice) through Lanayru. <span class="hl">Farosh</span> (electric) through Faron/Lake Hylia. Land on their back, climb to horn, strike. Each horn gives +20 fuse attack + element, and cooks into 30-minute resistance buff.`,cards:c};}
+if(match(ql,['shrine','152','blessing'])){const c=findItems(["ancient hero's aspect"]);return{text:`<span class="hl">152 shrines</span> total: 120 surface, 32 sky. Each gives one Light of Blessing — trade 4 at Goddess Statues for a heart or stamina upgrade. Complete all 152 for the <span class="hl">Ancient Hero's Aspect</span>. Use Shrine Sensor from Hateno Research Lab.`,cards:c};}
+if(match(ql,['zonai','device','battery','energy'])){const c=findItems(['zonaite set','air bike','zonaite','large zonaite']);return{text:`Get Zonai Devices from dispensers on Sky Islands and in Depths. <span class="hl">Zonaite Set</span> doubles battery recharge — essential for builders. Farm <span class="hl">Zonaite</span> in the Depths. Key devices: Fans (flight), Wheels (ground), Rockets (speed), Beam Emitters (combat), Springs (launch).`,cards:c};}
+if(match(ql,['shield','parry','block','guard'])){const c=findItems(['hylian shield','savage lynel shield','gloom shield','royal shield']);return{text:`The <span class="hl">Hylian Shield</span> is the ultimate shield at 90 defense — find it in Hyrule Castle Lockup. Before that, the <span class="hl">Savage Lynel Shield</span> at 62 is second best. Fuse a <span class="hl">Ruby</span> for fire burst on parry, or a <span class="hl">Puffshroom</span> for smoke screen escape.`,cards:c};}
+if(match(ql,['bow','arrow','ranged','shoot'])){const c=findItems(["royal guard's bow",'savage lynel bow','great eagle bow',"demon king's bow","forest dweller's bow"]);return{text:`Best single-shot: <span class="hl">Royal Guard's Bow</span> at 50 damage. Best multi-shot: <span class="hl">Savage Lynel Bow</span> fires 3 arrows for 96 total. <span class="hl">Great Eagle Bow</span> is the fastest triple-shot. <span class="hl">Demon King's Bow</span> scales with hearts up to 50.`,cards:c};}
+if(match(ql,['rain','climb','slip','wet'])){const c=findItems(['froggy set','climbing set','zora sword','zora set']);return{text:`The <span class="hl">Froggy Set</span> completely prevents slipping in rain. Get it from the Lucky Clover Gazette questline. The <span class="hl">Climbing Set</span> speeds up all climbing. If you don't have the Froggy Set yet, use Revali's Gale or Ascend through surfaces.`,cards:c};}
+if(match(ql,['horse','mount','stable','pony'])){return{text:`Catch horses in Hyrule Field, register at stables (20 rupees). Look for Speed 5, Stamina 5 horses near Taobab Grassland. Feed <span class="hl">Endura Carrots</span> for temporary bonus spurs. The Giant Horse is near Taobab Grassland. Lord of the Mountain at Satori Mountain can't be registered. Pony Points earn gear at stables.`,cards:findItems(['endura carrot'])};}
+if(match(ql,['blood moon','reset','respawn'])){return{text:`Blood Moons occur every ~2 hours 48 minutes of real play time, resetting all enemies and weapons. Cook during Blood Moon (11:30 PM in-game) for guaranteed critical success. All overworld weapons respawn. Stone Taluses, Hinoxes, and Lynels all reset.`,cards:[]};}
+const nm=ALL.filter(i=>i.name.toLowerCase().includes(ql)||ql.includes(i.name.toLowerCase()));
+if(nm.length>0){const item=nm[0];let t=`<span class="hl">${item.name}</span> — ${item.desc}`;if(item.fuse)t+=`<br><br><strong>Best Fusion:</strong> ${item.fuse}`;if(item.components)t+=`<br><br><strong>Components:</strong> ${item.components}`;if(item.bonus)t+=`<br><br><strong>Set Bonus:</strong> ${item.bonus}`;if(item.pieces)t+=`<br><br><strong>Pieces:</strong> ${item.pieces.join(' · ')}`;return{text:t,cards:nm.slice(0,5)};}
+const rs=ALL.filter(i=>{const h=`${i.name} ${i.sub} ${i.desc} ${i.loc||''} ${i.bonus||''} ${i.fuse||''}`.toLowerCase();return ql.split(/\s+/).some(w=>w.length>2&&h.includes(w));});
+if(rs.length>0)return{text:`Here's what I found:`,cards:rs.slice(0,6)};
+return{text:`I don't have that yet — the knowledge base is growing. Try asking about weapons, armor, materials, builds, cooking, dragons, shrines, shields, bows, or combat tips.`,cards:[]};}
 
 const chat=document.getElementById('chat');
 function addMsg(html,isUser=false){const d=document.createElement('div');d.className=`msg ${isUser?'user':'companion'}`;d.innerHTML=`<div class="bubble">${html}</div>`;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
-function addCompanionMsg(text,cards=[]){const d=document.createElement('div');d.className='msg companion';d.innerHTML=`<div class="bubble">${text}${renderCards(cards)}</div>`;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;}
-function send(text){if(!text.trim())return;addMsg(text,true);document.getElementById('input').value='';const t=addMsg('<div class="typing"><span></span><span></span><span></span></div>');t.id='typing';setTimeout(()=>{document.getElementById('typing')?.remove();const r=findResponse(text);addCompanionMsg(r.text,r.cards);},500+Math.random()*500);}
+function addCompanionMsg(text,cards=[]){
+  const map=renderMiniMap(cards);
+  const d=document.createElement('div');d.className='msg companion';
+  d.innerHTML=`<div class="bubble">${text}${renderCards(cards)}${map}</div>`;
+  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+}
+function send(text){if(!text.trim())return;addMsg(text,true);document.getElementById('input').value='';const t=addMsg('<div class="typing"><span></span><span></span><span></span></div>');t.id='typing';setTimeout(()=>{document.getElementById('typing')?.remove();const r=findResponse(text);addCompanionMsg(r.text,r.cards);},600+Math.random()*600);}
 
 document.getElementById('send').addEventListener('click',()=>send(document.getElementById('input').value));
 document.getElementById('input').addEventListener('keypress',e=>{if(e.key==='Enter')send(e.target.value);});
-document.getElementById('quick-actions').addEventListener('click',e=>{if(e.target.classList.contains('quick-btn'))send(e.target.dataset.q);});
-addCompanionMsg(`Welcome to <span class="hl">Forest Dweller's Project</span>. I know everything about Tears of the Kingdom — every weapon, every armor set, every material, every build. Ask me anything, or tap a button below.`,[]);
+document.getElementById('qa').addEventListener('click',e=>{if(e.target.classList.contains('quick-btn'))send(e.target.dataset.q);});
+addCompanionMsg(`Welcome to <span class="welcome-glow">Forest Dweller's Project</span>. I know everything about Tears of the Kingdom — every weapon, every armor set, every material, every build. Ask me anything, or tap a button below.`,[]);
 </script>
 </body>
 </html>

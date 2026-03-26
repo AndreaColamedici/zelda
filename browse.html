@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse — Forest Dweller's Project</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root{--sh:#00d4ff;--sh-dim:#0088aa;--zonai:#7cfc00;--depths:#a78bfa;--gold:#f5c842;--red:#ff6b6b;--blue:#60a5fa;--bg:#030810;--panel:#070e1c;--card:#0b1528;--border:#142040;--t1:#e8ecf4;--t2:#94a3b8;--t3:#4a6080;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 100% 50% at 50% -10%,rgba(0,212,255,.07) 0%,transparent 60%);}
+.app{max-width:1200px;margin:0 auto;padding:20px 24px;position:relative;z-index:1;}
+/* Header */
+.header{text-align:center;margin-bottom:24px;}
+.header h1{font-family:'Cinzel',serif;font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--sh) 0%,#66e0ff 50%,var(--sh) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ts 4s linear infinite;letter-spacing:4px;text-transform:uppercase;}
+@keyframes ts{0%{background-position:0% center;}100%{background-position:200% center;}}
+.header .sub{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:3px;text-transform:uppercase;}
+.back-link{display:inline-block;margin-top:10px;color:var(--sh-dim);font-size:12px;text-decoration:none;letter-spacing:1px;transition:color .3s;}.back-link:hover{color:var(--sh);}
+/* Controls */
+.controls{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+.search{flex:1;min-width:200px;padding:12px 18px;background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--t1);font-size:14px;outline:none;transition:border-color .3s;}.search:focus{border-color:var(--sh);}
+.search::placeholder{color:var(--t3);}
+.sort-select{padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;color:var(--t1);font-size:13px;outline:none;cursor:pointer;}
+.count{font-size:12px;color:var(--t3);letter-spacing:1px;margin-left:auto;}
+/* Tabs */
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.tab{padding:8px 18px;border-radius:20px;background:var(--panel);border:1px solid var(--border);cursor:pointer;font-size:12px;color:var(--t3);transition:all .3s;letter-spacing:.5px;}.tab:hover{color:var(--t2);border-color:var(--t3);}
+.tab.active{background:rgba(0,212,255,.08);border-color:var(--sh);color:var(--sh);}
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.card{background:linear-gradient(168deg,var(--card),#060d1a);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 30px rgba(0,212,255,.05);}
+.card.legendary{border-color:rgba(245,200,66,.2);}.card.legendary:hover{box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 40px rgba(245,200,66,.08);}
+.card.rare{border-color:rgba(167,139,250,.15);}.card.rare:hover{box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 30px rgba(167,139,250,.06);}
+.card-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative;overflow:hidden;}
+.card-img img{width:100%;height:100%;object-fit:contain;padding:8px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4));}
+.card-img .glow{position:absolute;width:80px;height:80px;border-radius:50%;filter:blur(35px);opacity:.15;}
+.card:hover .glow{opacity:.4;}
+.glow.weapon{background:var(--red);}.glow.armor{background:var(--blue);}.glow.material{background:var(--zonai);}.glow.build{background:var(--depths);}.glow.shrine{background:var(--gold);}
+.card-body{padding:10px 14px 14px;}
+.card-name{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.card-type{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.card-stats{display:flex;gap:8px;align-items:center;}
+.stat{font-size:10px;color:var(--t3);}.stat .v{font-weight:700;font-size:14px;font-family:'Cinzel',serif;}
+.stat.atk .v{color:var(--red);}.stat.def .v{color:var(--blue);}.stat.fuse .v{color:var(--zonai);}
+.badge{font-size:8px;padding:2px 7px;border-radius:5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-left:auto;}
+.badge.legendary{background:rgba(245,200,66,.1);color:var(--gold);border:1px solid rgba(245,200,66,.15);}
+.badge.rare{background:rgba(167,139,250,.08);color:var(--depths);border:1px solid rgba(167,139,250,.12);}
+.badge.uncommon{background:rgba(0,212,255,.06);color:var(--sh);border:1px solid rgba(0,212,255,.1);}
+.badge.common{background:rgba(100,116,139,.06);color:var(--t3);border:1px solid rgba(100,116,139,.1);}
+/* Detail Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(2,4,10,.85);backdrop-filter:blur(12px);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal{background:linear-gradient(175deg,#0a1228,#040a18);border:1px solid var(--border);border-radius:20px;width:100%;max-width:560px;max-height:80vh;overflow-y:auto;animation:pop .35s cubic-bezier(.16,1,.3,1);box-shadow:0 40px 80px rgba(0,0,0,.6);}
+@keyframes pop{from{opacity:0;transform:translateY(30px) scale(.95);}to{opacity:1;transform:none;}}
+.modal-hero{padding:28px 24px 20px;display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--border);}
+.modal-emoji{font-size:44px;width:70px;height:70px;display:flex;align-items:center;justify-content:center;position:relative;}
+.modal-emoji img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));}
+.modal-info h2{font-family:'Cinzel',serif;font-size:20px;color:var(--sh);}
+.modal-info .msub{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:2px;margin-top:4px;}
+.modal-close{margin-left:auto;width:38px;height:38px;border-radius:10px;background:rgba(3,8,16,.8);border:1px solid var(--border);color:var(--t3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}.modal-close:hover{color:var(--sh);border-color:var(--sh);}
+.modal-section{padding:16px 24px;}
+.modal-section h4{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--t3);margin-bottom:8px;}
+.modal-section p{font-size:13px;line-height:1.7;color:var(--t2);}
+.modal-stats{display:flex;gap:10px;padding:16px 24px;}
+.mstat{flex:1;background:rgba(5,10,22,.9);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.mstat .mv{font-family:'Cinzel',serif;font-size:26px;font-weight:700;}.mstat .ml{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;}
+.mstat.atk .mv{color:var(--red);}.mstat.def .mv{color:var(--blue);}.mstat.fuse .mv{color:var(--zonai);}.mstat.gold .mv{color:var(--gold);font-size:12px;}
+.no-results{text-align:center;padding:60px 20px;color:var(--t3);font-size:14px;}
+@media(max-width:640px){.app{padding:14px;}.grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}.header h1{font-size:20px;}.controls{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>Browse Hyrule</h1>
+    <div class="sub">Complete Item Database</div>
+    <a href="index.html" class="back-link">← Back to Companion</a>
+  </header>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-cat="all">All</div>
+    <div class="tab" data-cat="weapons">Weapons</div>
+    <div class="tab" data-cat="armor">Armor</div>
+    <div class="tab" data-cat="materials">Materials</div>
+    <div class="tab" data-cat="builds">Builds</div>
+    <div class="tab" data-cat="shrines">Shrines</div>
+  </div>
+  <div class="controls">
+    <input type="text" class="search" id="search" placeholder="Search by name...">
+    <select class="sort-select" id="sort">
+      <option value="name">Name A-Z</option>
+      <option value="atk">Attack ↓</option>
+      <option value="def">Defense ↓</option>
+      <option value="rarity">Rarity ↓</option>
+    </select>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="no-results" id="nope" style="display:none">No items found.</div>
+</div>
+<div class="modal-bg" id="mbg">
+  <div class="modal" id="modal"></div>
+</div>
+<script src="db.js"></script>
+<script>
+const catMap={weapons:'weapon',armor:'armor',materials:'material',builds:'build',shrines:'shrine'};
+function getType(item){if(DB.weapons.includes(item))return'weapon';if(DB.armor.includes(item))return'armor';if(DB.materials.includes(item))return'material';if(DB.shrines&&DB.shrines.includes(item))return'shrine';return'build';}
+const rarityOrder={legendary:3,rare:2,uncommon:1,common:0};
+let filter='all',sort='name',query='';
+
+function items(){
+  let list=[...DB.weapons,...DB.armor,...DB.materials,...DB.builds,...(DB.shrines||[])];
+  if(filter!=='all'){const cat=catMap[filter];list=list.filter(i=>getType(i)===cat);}
+  if(query){const q=query.toLowerCase();list=list.filter(i=>i.name.toLowerCase().includes(q)||(i.sub&&i.sub.toLowerCase().includes(q)));}
+  list.sort((a,b)=>{
+    if(sort==='name')return a.name.localeCompare(b.name);
+    if(sort==='atk')return(b.atk||b.fuseDmg||0)-(a.atk||a.fuseDmg||0);
+    if(sort==='def')return(b.def||0)-(a.def||0);
+    if(sort==='rarity')return(rarityOrder[b.rarity]||0)-(rarityOrder[a.rarity]||0);
+    return 0;
+  });
+  return list;
+}
+
+function imgTag(item){
+  const src='img/'+item.id+'.png';
+  const fb=item.emoji||'📦';
+  return '<img src="'+src+'" alt="'+item.name+'" onerror="this.outerHTML=\'<span>'+fb+'</span>\'" loading="lazy">';
+}
+
+function render(){
+  const list=items();
+  const grid=document.getElementById('grid');
+  const nope=document.getElementById('nope');
+  document.getElementById('count').textContent=list.length+' items';
+  if(!list.length){grid.innerHTML='';nope.style.display='block';return;}
+  nope.style.display='none';
+  grid.innerHTML=list.map(item=>{
+    const t=getType(item);
+    const a=item.atk?'<div class="stat atk"><span class="v">'+item.atk+'</span> ATK</div>':'';
+    const d=item.def?'<div class="stat def"><span class="v">'+item.def+'</span> DEF</div>':'';
+    const f=item.fuseDmg?'<div class="stat fuse"><span class="v">+'+item.fuseDmg+'</span> FUSE</div>':'';
+    return '<div class="card '+(item.rarity||'')+'" onclick="detail(\''+item.id+'\')"><div class="card-img"><div class="glow '+t+'"></div>'+imgTag(item)+'</div><div class="card-body"><div class="card-name">'+item.name+'</div><div class="card-type">'+item.sub+'</div><div class="card-stats">'+a+d+f+'<span class="badge '+(item.rarity||'')+'">'+(item.rarity||'')+'</span></div></div></div>';
+  }).join('');
+}
+
+function detail(id){
+  const ALL=[...DB.weapons,...DB.armor,...DB.materials,...DB.builds,...(DB.shrines||[])];
+  const item=ALL.find(i=>i.id===id);if(!item)return;
+  const t=getType(item);
+  let stats='';
+  if(item.atk)stats+='<div class="mstat atk"><div class="mv">'+item.atk+'</div><div class="ml">Attack</div></div>';
+  if(item.def)stats+='<div class="mstat def"><div class="mv">'+item.def+'</div><div class="ml">Defense</div></div>';
+  if(item.fuseDmg)stats+='<div class="mstat fuse"><div class="mv">+'+item.fuseDmg+'</div><div class="ml">Fuse Bonus</div></div>';
+  if(item.bonus)stats+='<div class="mstat gold"><div class="mv">'+item.bonus+'</div><div class="ml">Set Bonus</div></div>';
+  if(item.challenge)stats+='<div class="mstat gold"><div class="mv">'+item.challenge+'</div><div class="ml">Challenge</div></div>';
+  let sections='<div class="modal-section"><h4>Description</h4><p>'+(item.desc||'')+'</p></div>';
+  if(item.loc)sections+='<div class="modal-section"><h4>Location</h4><p>📍 '+item.loc+'</p></div>';
+  if(item.fuse)sections+='<div class="modal-section"><h4>Best Fusion</h4><p>💡 '+item.fuse+'</p></div>';
+  if(item.pieces)sections+='<div class="modal-section"><h4>Pieces</h4><p>'+item.pieces.join(' · ')+'</p></div>';
+  if(item.components)sections+='<div class="modal-section"><h4>Components</h4><p>'+item.components+'</p></div>';
+  document.getElementById('modal').innerHTML='<div class="modal-hero"><div class="modal-emoji">'+imgTag(item)+'</div><div class="modal-info"><h2>'+item.name+'</h2><div class="msub">'+item.sub+'</div></div><button class="modal-close" onclick="closeModal()">✕</button></div>'+(stats?'<div class="modal-stats">'+stats+'</div>':'')+sections;
+  document.getElementById('mbg').classList.add('open');
+}
+function closeModal(){document.getElementById('mbg').classList.remove('open');}
+document.getElementById('mbg').addEventListener('click',e=>{if(e.target.id==='mbg')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+document.getElementById('search').addEventListener('input',e=>{query=e.target.value;render();});
+document.getElementById('sort').addEventListener('change',e=>{sort=e.target.value;render();});
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(!e.target.classList.contains('tab'))return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  e.target.classList.add('active');
+  filter=e.target.dataset.cat;
+  render();
+});
+render();
+</script>
+</body>
+</html>

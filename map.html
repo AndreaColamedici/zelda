@@ -14,216 +14,209 @@
   --t1:#e8ecf4;--t2:#94a3b8;--t3:#4a6080;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 100% 50% at 50% -10%,rgba(0,212,255,.07) 0%,transparent 60%);}
 
-/* ── BOOT ── */
-#boot{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s;}
-#boot.done{opacity:0;visibility:hidden;pointer-events:none;}
-#boot svg{width:80px;height:80px;animation:bp 1.5s ease-in-out infinite;}
-@keyframes bp{0%,100%{filter:drop-shadow(0 0 8px rgba(0,212,255,.3));transform:scale(1);}50%{filter:drop-shadow(0 0 30px rgba(0,212,255,.8));transform:scale(1.06);}}
-.bb-w{width:200px;height:2px;background:rgba(0,212,255,.1);border-radius:2px;margin-top:28px;overflow:hidden;}
-.bb{height:100%;width:0;background:var(--sh);border-radius:2px;transition:width .3s;box-shadow:0 0 12px rgba(0,212,255,.6);}
-.bt{font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;color:rgba(0,212,255,.4);margin-top:14px;text-transform:uppercase;}
-
-/* ── BODY ── */
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);height:100vh;overflow:hidden;}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 100% 50% at 50% -10%,rgba(0,212,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 10% 90%,rgba(167,139,250,.04) 0%,transparent 50%),radial-gradient(ellipse 60% 40% at 90% 80%,rgba(0,136,170,.03) 0%,transparent 50%);}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,212,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.018) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(0,0,0,.6) 0%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(0,0,0,.6) 0%,transparent 100%);}
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse 75% 65% at 50% 45%,transparent 50%,rgba(3,8,16,.7) 100%);}
-#particles{position:fixed;inset:0;pointer-events:none;z-index:1;}
-#runes{position:fixed;inset:0;pointer-events:none;z-index:1;}
-
-.app{display:flex;flex-direction:column;height:100vh;max-width:940px;margin:0 auto;position:relative;z-index:2;opacity:0;transition:opacity .6s ease .3s;}
-.app.visible{opacity:1;}
-
-/* ── HEADER ── */
-.header{padding:22px 24px 14px;text-align:center;flex-shrink:0;}
-.sheikah-eye{width:52px;height:52px;margin:0 auto 8px;animation:ef 6s ease-in-out infinite;filter:drop-shadow(0 0 15px rgba(0,212,255,.5));}
-@keyframes ef{0%,100%{transform:translateY(0);filter:drop-shadow(0 0 15px rgba(0,212,255,.4));}50%{transform:translateY(-4px);filter:drop-shadow(0 0 25px rgba(0,212,255,.7));}}
-.header h1{font-family:'Cinzel',serif;font-size:24px;font-weight:700;background:linear-gradient(135deg,var(--sh) 0%,#66e0ff 50%,var(--sh) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ts 4s linear infinite;letter-spacing:6px;text-transform:uppercase;}
-@keyframes ts{0%{background-position:0% center;}100%{background-position:200% center;}}
-.header .sub{font-size:10px;color:var(--t3);margin-top:5px;letter-spacing:4px;text-transform:uppercase;}
-.hd{display:flex;align-items:center;gap:12px;width:280px;margin:14px auto 0;}
-.hd .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);}
-.hd .tri{width:10px;height:10px;position:relative;}.hd .tri::before{content:'';position:absolute;inset:0;clip-path:polygon(50% 0%,0% 100%,100% 100%);background:var(--sh);opacity:.4;}
+/* NAV */
 .nav-links{display:flex;gap:8px;justify-content:center;margin-top:10px;}
 .nav-link{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);text-decoration:none;padding:5px 16px;border:1px solid var(--border);border-radius:20px;transition:all .35s cubic-bezier(.16,1,.3,1);}.nav-link:hover{color:var(--sh);border-color:var(--sh);box-shadow:0 0 20px rgba(0,212,255,.1);transform:translateY(-1px);}
 
-/* ── MAIN ── */
-.map-container{flex:1;display:flex;gap:24px;padding:0 24px 24px;overflow:hidden;min-height:0;}
-.map-section{flex:1;display:flex;flex-direction:column;min-width:0;}
+/* HEADER */
+.header{padding:22px 24px 14px;text-align:center;}
+.header h1{font-family:'Cinzel',serif;font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--sh) 0%,#66e0ff 50%,var(--sh) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ts 4s linear infinite;letter-spacing:6px;text-transform:uppercase;}
+@keyframes ts{0%{background-position:0% center;}100%{background-position:200% center;}}
+.header .sub{font-size:10px;color:var(--t3);margin-top:5px;letter-spacing:4px;text-transform:uppercase;}
 
-/* ── MAP ── */
-.map-wrap{background:linear-gradient(135deg,rgba(5,10,22,.8),rgba(8,14,28,.9));border:1px solid var(--border);border-radius:16px;padding:16px;flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.map-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 0%,rgba(0,212,255,.03) 100%);pointer-events:none;}
-svg.map-svg{max-width:100%;max-height:100%;cursor:pointer;filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));}
+/* MAP WRAPPER */
+.map-wrap{max-width:740px;margin:0 auto;padding:0 16px 16px;position:relative;}
+.map-box{background:linear-gradient(135deg,rgba(5,10,22,.8),rgba(8,14,28,.9));border:1px solid var(--border);border-radius:16px;padding:12px;position:relative;overflow:hidden;touch-action:pan-x pan-y;}
+.map-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(0,212,255,.04),transparent 70%);pointer-events:none;}
 
-/* ── REGIONS ── */
-.region{fill:rgba(0,212,255,.08);stroke:var(--sh);stroke-width:2;transition:all .3s cubic-bezier(.16,1,.3,1);cursor:pointer;filter:drop-shadow(0 0 0 rgba(0,212,255,0));}
-.region:hover{fill:rgba(0,212,255,.15);filter:drop-shadow(0 0 15px rgba(0,212,255,.4));stroke-width:2.5;}
-.region.active{fill:rgba(0,212,255,.25);filter:drop-shadow(0 0 25px rgba(0,212,255,.6));stroke-width:3;}
+/* SVG MAP */
+svg.hyrule{width:100%;height:auto;display:block;}
+.region{fill:rgba(0,212,255,.06);stroke:rgba(0,212,255,.35);stroke-width:1.5;cursor:pointer;transition:all .3s;}
+.region:hover{fill:rgba(0,212,255,.15);stroke:var(--sh);stroke-width:2.5;filter:drop-shadow(0 0 12px rgba(0,212,255,.3));}
+.region.active{fill:rgba(0,212,255,.22);stroke:var(--sh);stroke-width:2.5;filter:drop-shadow(0 0 18px rgba(0,212,255,.5));}
+.region.sky-r{fill:rgba(124,252,0,.05);stroke:rgba(124,252,0,.35);}
+.region.sky-r:hover,.region.sky-r.active{fill:rgba(124,252,0,.15);stroke:var(--zonai);filter:drop-shadow(0 0 12px rgba(124,252,0,.3));}
+.region.depths-r{fill:rgba(167,139,250,.05);stroke:rgba(167,139,250,.35);}
+.region.depths-r:hover,.region.depths-r.active{fill:rgba(167,139,250,.15);stroke:var(--depths);filter:drop-shadow(0 0 12px rgba(167,139,250,.3));}
 
-/* ── PANEL ── */
-.panel{width:280px;background:linear-gradient(135deg,var(--panel),#060d1a);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;transition:all .3s cubic-bezier(.16,1,.3,1);max-height:100%;}
-.panel.hidden{opacity:0;pointer-events:none;transform:translateX(20px);}
+/* LABELS */
+.rlabel{font-family:'Cinzel',serif;font-size:11px;fill:rgba(0,212,255,.5);text-anchor:middle;pointer-events:none;letter-spacing:1.5px;text-transform:uppercase;transition:fill .3s;}
+.rlabel.sky-l{fill:rgba(124,252,0,.5);}
+.rlabel.depths-l{fill:rgba(167,139,250,.5);}
 
-.panel-header{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.panel-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--sh);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-.panel-count{font-size:11px;color:var(--t3);letter-spacing:1px;}
+/* REGION LIST (mobile fallback + quick access) */
+.region-list{max-width:740px;margin:16px auto 0;padding:0 16px;}
+.region-list h3{font-family:'Cinzel',serif;font-size:12px;color:var(--t3);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;text-align:center;}
+.rlist{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.rbtn{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(7,14,28,.9);border:1px solid var(--border);color:var(--t2);cursor:pointer;transition:all .3s;letter-spacing:1px;white-space:nowrap;}
+.rbtn:hover{border-color:var(--sh);color:var(--sh);box-shadow:0 0 15px rgba(0,212,255,.08);}
+.rbtn.active{border-color:var(--sh);color:var(--sh);background:rgba(0,212,255,.08);box-shadow:0 0 20px rgba(0,212,255,.1);}
+.rbtn.sky-btn{border-color:rgba(124,252,0,.2);}.rbtn.sky-btn:hover,.rbtn.sky-btn.active{border-color:var(--zonai);color:var(--zonai);background:rgba(124,252,0,.06);box-shadow:0 0 15px rgba(124,252,0,.08);}
+.rbtn.depths-btn{border-color:rgba(167,139,250,.2);}.rbtn.depths-btn:hover,.rbtn.depths-btn.active{border-color:var(--depths);color:var(--depths);background:rgba(167,139,250,.06);box-shadow:0 0 15px rgba(167,139,250,.08);}
 
-.panel-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
-.panel-body::-webkit-scrollbar{width:4px;}
-.panel-body::-webkit-scrollbar-track{background:transparent;}
-.panel-body::-webkit-scrollbar-thumb{background:rgba(0,212,255,.15);border-radius:2px;}
-.panel-body::-webkit-scrollbar-thumb:hover{background:rgba(0,212,255,.25);}
+/* ITEMS PANEL */
+.items-panel{max-width:740px;margin:20px auto 40px;padding:0 16px;display:none;}
+.items-panel.open{display:block;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.panel-title{font-family:'Cinzel',serif;font-size:18px;color:var(--sh);letter-spacing:2px;}
+.panel-count{font-size:12px;color:var(--t3);background:rgba(0,212,255,.08);padding:4px 12px;border-radius:12px;}
+.panel-close{background:rgba(0,212,255,.1);border:1px solid var(--border);color:var(--sh);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;}.panel-close:hover{background:rgba(0,212,255,.2);border-color:var(--sh);}
 
-.item-group{background:rgba(11,21,40,.5);border:1px solid rgba(0,212,255,.1);border-radius:12px;padding:12px;transition:all .3s;}
-.item-group:hover{background:rgba(11,21,40,.7);border-color:rgba(0,212,255,.2);}
+.type-group{margin-bottom:20px;}
+.type-header{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.type-header::before{content:'';width:3px;height:3px;background:var(--gold);border-radius:50%;}
+.type-header .tcount{color:var(--t3);font-weight:400;font-size:10px;}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.item-card{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(11,21,40,.5);border:1px solid rgba(0,212,255,.08);border-radius:10px;cursor:pointer;transition:all .25s;}
+.item-card:hover{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.2);transform:translateY(-1px);}
+.item-card .ic-emoji{font-size:22px;flex-shrink:0;width:30px;text-align:center;}
+.item-card .ic-emoji img{width:28px;height:28px;object-fit:contain;}
+.item-card .ic-name{font-size:12px;color:var(--t2);font-weight:500;line-height:1.3;}
+.item-card .ic-sub{font-size:10px;color:var(--t3);}
 
-.group-type{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.group-type::before{content:'';width:3px;height:3px;background:var(--gold);border-radius:50%;opacity:.6;}
-
-.items-list{display:flex;flex-direction:column;gap:6px;font-size:12px;}
-.item-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(0,0,0,.2);border-radius:6px;transition:all .25s;cursor:pointer;}
-.item-row:hover{background:rgba(0,212,255,.1);transform:translateX(4px);}
-.item-name{color:var(--t2);font-weight:500;}
-.item-count{color:var(--t3);font-size:10px;background:rgba(0,212,255,.1);padding:2px 6px;border-radius:4px;min-width:24px;text-align:center;}
-
-.panel-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:12px;text-align:center;padding:20px;}
-
-/* ── MODAL ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(4px);}
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(6px);}
 .modal-bg.open{display:flex;}
-.modal{background:linear-gradient(135deg,var(--panel),#060d1a);border:1px solid var(--border);border-radius:16px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative;}
-.modal-close{position:absolute;top:14px;right:14px;background:rgba(0,212,255,.1);border:1px solid var(--border);color:var(--sh);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.modal-close:hover{background:rgba(0,212,255,.2);border-color:var(--sh);}
-
-.modal-hero{display:flex;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.modal-emoji{font-size:80px;width:100px;height:100px;display:flex;align-items:center;justify-content:center;background:rgba(0,212,255,.06);border-radius:12px;flex-shrink:0;}
+.modal{background:linear-gradient(135deg,var(--panel),#060d1a);border:1px solid var(--border);border-radius:16px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;}
+.modal::-webkit-scrollbar{width:4px;}.modal::-webkit-scrollbar-thumb{background:rgba(0,212,255,.15);border-radius:2px;}
+.modal-close{position:absolute;top:14px;right:14px;background:rgba(0,212,255,.1);border:1px solid var(--border);color:var(--sh);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;}.modal-close:hover{background:rgba(0,212,255,.2);border-color:var(--sh);}
+.modal-hero{display:flex;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.modal-emoji{font-size:60px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(0,212,255,.06);border-radius:12px;flex-shrink:0;}
 .modal-emoji img{width:100%;height:100%;object-fit:contain;padding:8px;}
-.modal-info h2{font-family:'Cinzel',serif;font-size:20px;color:var(--t1);margin-bottom:4px;}
-.modal-info .msub{font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;}
-
-.modal-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
-.mstat{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);border-radius:8px;padding:12px;text-align:center;transition:all .2s;}
+.modal-info h2{font-family:'Cinzel',serif;font-size:18px;color:var(--t1);margin-bottom:4px;}
+.modal-info .msub{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;}
+.modal-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mstat{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.1);border-radius:8px;padding:10px;text-align:center;}
 .mstat.atk{border-color:rgba(255,107,107,.2);background:rgba(255,107,107,.04);}
 .mstat.def{border-color:rgba(96,165,250,.2);background:rgba(96,165,250,.04);}
 .mstat.gold{border-color:rgba(245,200,66,.2);background:rgba(245,200,66,.04);}
-.mv{font-family:'Cinzel',serif;font-size:24px;font-weight:700;color:var(--t1);margin-bottom:4px;}
-.mstat.atk .mv{color:var(--red);}
-.mstat.def .mv{color:var(--blue);}
-.mstat.gold .mv{color:var(--gold);}
-.ml{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;}
-
-.modal-section{margin-bottom:16px;}
-.modal-section h4{font-family:'Cinzel',serif;font-size:13px;color:var(--sh);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
-.modal-section p{font-size:13px;color:var(--t2);line-height:1.6;}
-
-.modal::-webkit-scrollbar{width:4px;}
-.modal::-webkit-scrollbar-thumb{background:rgba(0,212,255,.15);border-radius:2px;}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1200px){
-  .map-container{flex-direction:column;gap:16px;}
-  .panel{width:100%;max-height:280px;}
-}
-
-@media(max-width:768px){
-  .header{padding:16px 16px 10px;}
-  .header h1{font-size:20px;letter-spacing:4px;}
-  .map-container{padding:0 16px 16px;}
-  .panel{width:100%;}
-  svg.map-svg{width:100%;}
-}
+.mv{font-size:16px;font-weight:700;color:var(--t1);}.ml{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.modal-section{margin-bottom:14px;}.modal-section h4{font-family:'Cinzel',serif;font-size:11px;color:var(--sh-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}.modal-section p{font-size:13px;line-height:1.7;color:var(--t2);}
 </style>
 </head>
 <body>
 
-<div id="boot">
-  <svg viewBox="0 0 64 64" fill="none"><path d="M32 8c13.3 0 24 10.7 24 24s-10.7 24-24 24S8 45.3 8 32 18.7 8 32 8m0-4C14.3 4 4 14.3 4 32s10.3 28 28 28 28-10.3 28-28S49.7 4 32 4z" fill="rgba(0,212,255,.6)"/><circle cx="32" cy="16" r="3" fill="var(--sh)"/></svg>
-  <div class="bb-w"><div class="bb"></div></div>
-  <div class="bt">initializing slate</div>
+<div class="header">
+  <h1>Hyrule Map</h1>
+  <div class="sub">Tap a region to explore its items</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Companion</a>
+    <a href="browse.html" class="nav-link">Browse</a>
+    <a href="tracker.html" class="nav-link">Tracker</a>
+  </div>
 </div>
 
-<div class="vignette"></div>
-<div id="particles"></div>
-<div id="runes"></div>
+<div class="map-wrap">
+  <div class="map-box">
+    <svg class="hyrule" viewBox="0 0 700 550" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines for Sheikah aesthetic -->
+      <defs>
+        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,212,255,.04)" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="700" height="550" fill="url(#grid)"/>
 
-<div class="app">
-  <div class="header">
-    <svg class="sheikah-eye" viewBox="0 0 64 64" fill="none">
-      <path d="M32 8C18.7 8 8 18.7 8 32c0 5.3 1.7 10.2 4.6 14.3L32 48l19.4-1.7c2.9-4.1 4.6-9 4.6-14.3 0-13.3-10.7-24-24-24z" fill="rgba(0,212,255,.3)" stroke="var(--sh)" stroke-width="1.5"/>
-      <circle cx="32" cy="32" r="8" fill="var(--sh)"/>
-      <circle cx="32" cy="32" r="4" fill="var(--bg)"/>
+      <!-- Hebra (top left) -->
+      <path class="region" data-region="hebra" d="M60 30 L180 20 L230 60 L240 130 L180 160 L100 140 L50 90 Z"/>
+      <text class="rlabel" x="145" y="95">Hebra</text>
+
+      <!-- Tabantha (left of center, below Hebra) -->
+      <path class="region" data-region="tabantha" d="M50 90 L100 140 L180 160 L200 210 L150 250 L80 240 L30 180 Z"/>
+      <text class="rlabel" x="120" y="195">Tabantha</text>
+
+      <!-- Hyrule Ridge (center-left) -->
+      <path class="region" data-region="hyrule-ridge" d="M150 250 L200 210 L280 200 L300 260 L260 310 L180 300 Z"/>
+      <text class="rlabel" x="225" y="265">Ridge</text>
+
+      <!-- Central Hyrule (center) -->
+      <path class="region" data-region="central" d="M280 200 L380 180 L420 230 L400 300 L340 330 L300 260 Z"/>
+      <text class="rlabel" x="350" y="265">Central</text>
+
+      <!-- Great Hyrule Forest (north-center) -->
+      <path class="region" data-region="korok" d="M230 60 L340 40 L380 80 L380 140 L340 180 L280 200 L240 130 Z"/>
+      <text class="rlabel" x="305" y="125">Forest</text>
+
+      <!-- Eldin (northeast) -->
+      <path class="region" data-region="eldin" d="M380 40 L490 20 L540 80 L520 160 L460 190 L420 150 L380 80 Z"/>
+      <text class="rlabel" x="460" y="105">Eldin</text>
+
+      <!-- Akkala (far northeast) -->
+      <path class="region" data-region="akkala" d="M490 20 L620 30 L660 100 L620 170 L540 160 L540 80 Z"/>
+      <text class="rlabel" x="585" y="100">Akkala</text>
+
+      <!-- Lanayru (east) -->
+      <path class="region" data-region="lanayru" d="M420 230 L520 200 L620 170 L660 250 L600 320 L500 310 L440 290 Z"/>
+      <text class="rlabel" x="545" y="255">Lanayru</text>
+
+      <!-- Necluda (south-east) -->
+      <path class="region" data-region="necluda" d="M400 300 L500 310 L560 370 L520 440 L420 430 L370 380 Z"/>
+      <text class="rlabel" x="460" y="375">Necluda</text>
+
+      <!-- Faron (south) -->
+      <path class="region" data-region="faron" d="M260 380 L370 380 L420 430 L400 500 L310 510 L240 460 Z"/>
+      <text class="rlabel" x="330" y="450">Faron</text>
+
+      <!-- Gerudo Highlands (center-south) -->
+      <path class="region" data-region="gerudo-high" d="M180 300 L260 310 L300 350 L260 380 L240 460 L160 420 L140 350 Z"/>
+      <text class="rlabel" x="210" y="380">Gerudo H.</text>
+
+      <!-- Gerudo Desert (southwest) -->
+      <path class="region" data-region="gerudo" d="M30 280 L150 250 L180 300 L140 350 L160 420 L100 480 L20 430 L10 340 Z"/>
+      <text class="rlabel" x="90" y="370">Gerudo</text>
+
+      <!-- Sky Islands (floating, top-right) -->
+      <path class="region sky-r" data-region="sky" d="M440 45 L520 35 L550 55 L540 85 L480 90 L440 70 Z"/>
+      <text class="rlabel sky-l" x="492" y="67">Sky</text>
+      <!-- Second sky cluster -->
+      <path class="region sky-r" data-region="sky" d="M250 10 L310 5 L330 25 L310 45 L260 42 Z"/>
+      <text class="rlabel sky-l" x="290" y="30">Sky</text>
+
+      <!-- Depths (bottom) -->
+      <path class="region depths-r" data-region="depths" d="M100 490 L250 470 L400 500 L520 480 L580 510 L500 540 L300 550 L120 540 Z"/>
+      <text class="rlabel depths-l" x="340" y="520">The Depths</text>
+
+      <!-- Castle marker -->
+      <circle cx="350" cy="240" r="6" fill="none" stroke="var(--gold)" stroke-width="1.5" opacity=".6"/>
+      <text x="350" y="235" font-family="Cinzel,serif" font-size="7" fill="rgba(245,200,66,.5)" text-anchor="middle">Castle</text>
     </svg>
-    <h1>Hyrule Map</h1>
-    <div class="sub">Tap a region to explore</div>
-    <div class="hd"><div class="ln"></div><div class="tri"></div><div class="ln"></div></div>
-    <div class="nav-links">
-      <a href="index.html" class="nav-link">Companion</a>
-      <a href="browse.html" class="nav-link">Browse</a>
-      <a href="tracker.html" class="nav-link">Tracker</a>
+  </div>
+</div>
+
+<div class="region-list">
+  <h3>Or choose a region</h3>
+  <div class="rlist">
+    <button class="rbtn" data-r="central">Central Hyrule</button>
+    <button class="rbtn" data-r="hyrule-ridge">Hyrule Ridge</button>
+    <button class="rbtn" data-r="tabantha">Tabantha</button>
+    <button class="rbtn" data-r="hebra">Hebra</button>
+    <button class="rbtn" data-r="korok">Hyrule Forest</button>
+    <button class="rbtn" data-r="eldin">Eldin</button>
+    <button class="rbtn" data-r="akkala">Akkala</button>
+    <button class="rbtn" data-r="lanayru">Lanayru</button>
+    <button class="rbtn" data-r="necluda">Necluda</button>
+    <button class="rbtn" data-r="faron">Faron</button>
+    <button class="rbtn" data-r="gerudo">Gerudo Desert</button>
+    <button class="rbtn" data-r="gerudo-high">Gerudo Highlands</button>
+    <button class="rbtn sky-btn" data-r="sky">Sky Islands</button>
+    <button class="rbtn depths-btn" data-r="depths">The Depths</button>
+  </div>
+</div>
+
+<div class="items-panel" id="items-panel">
+  <div class="panel-head">
+    <div>
+      <div class="panel-title" id="p-title">Region</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="panel-count" id="p-count"></span>
+      <button class="panel-close" onclick="closePanel()">✕</button>
     </div>
   </div>
-
-  <div class="map-container">
-    <div class="map-section">
-      <div class="map-wrap">
-        <svg class="map-svg" viewBox="0 0 700 600" xmlns="http://www.w3.org/2000/svg">
-          <!-- Central Hyrule -->
-          <path class="region" data-region="central" d="M250 200 L350 150 L400 180 L420 260 L380 310 L300 320 L240 280 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Hyrule Ridge -->
-          <path class="region" data-region="hyrule-ridge" d="M350 150 L450 120 L500 160 L480 220 L420 260 L400 180 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Tabantha -->
-          <path class="region" data-region="tabantha" d="M180 100 L280 80 L350 120 L340 180 L240 200 L200 150 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Hebra -->
-          <path class="region" data-region="hebra" d="M280 80 L380 40 L420 80 L380 150 L350 120 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Great Hyrule Forest -->
-          <path class="region" data-region="korok" d="M320 280 L400 250 L450 300 L420 360 L360 380 L300 350 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Eldin -->
-          <path class="region" data-region="eldin" d="M480 220 L550 180 L600 240 L580 320 L500 340 L480 280 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Akkala -->
-          <path class="region" data-region="akkala" d="M550 180 L650 160 L680 220 L650 300 L580 320 L600 240 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Lanayru -->
-          <path class="region" data-region="lanayru" d="M500 340 L580 320 L650 300 L680 360 L600 420 L520 400 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Necluda -->
-          <path class="region" data-region="necluda" d="M450 300 L520 300 L520 400 L420 420 L380 360 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Faron -->
-          <path class="region" data-region="faron" d="M350 400 L420 420 L480 480 L400 540 L320 520 L300 460 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Gerudo -->
-          <path class="region" data-region="gerudo" d="M180 380 L280 350 L320 400 L300 480 L220 500 L160 440 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Gerudo Highlands -->
-          <path class="region" data-region="gerudo-high" d="M280 280 L350 240 L380 300 L360 380 L280 350 Z" stroke="var(--sh)" stroke-width="2"/>
-          
-          <!-- Sky Islands -->
-          <path class="region" data-region="sky" d="M400 60 L480 40 L520 80 L500 120 L430 110 Z" stroke="var(--zonai)" stroke-width="2" fill="rgba(124,252,0,.08)"/>
-          
-          <!-- Depths -->
-          <path class="region" data-region="depths" d="M300 500 L400 480 L450 540 L380 580 L280 560 Z" stroke="var(--depths)" stroke-width="2" fill="rgba(167,139,250,.08)"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="panel hidden" id="panel">
-      <div class="panel-header">
-        <div class="panel-title" id="panel-region">Select Region</div>
-        <div class="panel-count" id="panel-info"></div>
-      </div>
-      <div class="panel-body" id="panel-items">
-        <div class="panel-empty">Choose a region to see items</div>
-      </div>
-    </div>
-  </div>
+  <div id="p-body"></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -232,212 +225,120 @@ svg.map-svg{max-width:100%;max-height:100%;cursor:pointer;filter:drop-shadow(0 2
 
 <script src="db.js"></script>
 <script>
-// Region display names and aliases
-const REGION_MAP = {
-  'central': 'Central Hyrule',
-  'hyrule-ridge': 'Hyrule Ridge',
-  'tabantha': 'Tabantha',
-  'hebra': 'Hebra Mountains',
-  'korok': 'Great Hyrule Forest',
-  'eldin': 'Eldin',
-  'akkala': 'Akkala',
-  'lanayru': 'Lanayru',
-  'necluda': 'Necluda',
-  'faron': 'Faron',
-  'gerudo': 'Gerudo Desert',
-  'gerudo-high': 'Gerudo Highlands',
-  'sky': 'Sky Islands',
-  'depths': 'The Depths'
+const REGIONS={
+  central:'Central Hyrule',
+  'hyrule-ridge':'Hyrule Ridge',
+  tabantha:'Tabantha',
+  hebra:'Hebra Mountains',
+  korok:'Great Hyrule Forest',
+  eldin:'Eldin',
+  akkala:'Akkala',
+  lanayru:'Lanayru',
+  necluda:'Necluda',
+  faron:'Faron',
+  gerudo:'Gerudo Desert',
+  'gerudo-high':'Gerudo Highlands',
+  sky:'Sky Islands',
+  depths:'The Depths'
+};
+const ALIASES={
+  'light-dragon':'sky','hyrule-castle':'central','zora':'lanayru',
+  'goron':'eldin','rito':'tabantha','lurelin':'necluda','kakariko':'necluda','everywhere':null
 };
 
-const REGION_ALIASES = {
-  'light-dragon': 'sky',
-  'hyrule-castle': 'central',
-  'zora': 'lanayru',
-  'goron': 'eldin',
-  'rito': 'tabantha',
-  'lurelin': 'necluda',
-  'kakariko': 'necluda',
-  'everywhere': null
-};
+function norm(r){if(!r)return null;if(ALIASES[r]!==undefined)return ALIASES[r];if(REGIONS[r])return r;return null;}
+function allItems(){return[...(DB.weapons||[]),...(DB.armor||[]),...(DB.materials||[]),...(DB.builds||[]),...(DB.shrines||[]),...(DB.recipes||[])];}
+function itemType(i){if(DB.weapons.includes(i))return'weapon';if(DB.armor.includes(i))return'armor';if(DB.materials.includes(i))return'material';if(DB.shrines&&DB.shrines.includes(i))return'shrine';if(DB.recipes&&DB.recipes.includes(i))return'recipe';return'build';}
+function typeName(t){return{weapon:'Weapons',armor:'Armor',material:'Materials',shrine:'Shrines',recipe:'Recipes',build:'Builds'}[t]||'Items';}
+function imgTag(i){const s='img/'+i.id+'.png',fb=i.emoji||'📦';return'<img src="'+s+'" onerror="this.outerHTML=\'<span>'+fb+'</span>\'" style="width:28px;height:28px;object-fit:contain;">';}
 
-// Build all items list
-function getAllItems() {
-  return [
-    ...(DB.weapons || []),
-    ...(DB.armor || []),
-    ...(DB.materials || []),
-    ...(DB.builds || []),
-    ...(DB.shrines || []),
-    ...(DB.recipes || [])
-  ];
-}
+let activeRegion=null;
 
-// Normalize region code
-function normalizeRegion(r) {
-  if (!r) return null;
-  if (REGION_ALIASES[r]) return REGION_ALIASES[r];
-  if (REGION_MAP[r]) return r;
-  return null;
-}
+function openRegion(code){
+  activeRegion=code;
+  // highlight SVG
+  document.querySelectorAll('.region').forEach(r=>r.classList.remove('active'));
+  document.querySelectorAll('[data-region="'+code+'"]').forEach(r=>r.classList.add('active'));
+  // highlight button
+  document.querySelectorAll('.rbtn').forEach(b=>b.classList.toggle('active',b.dataset.r===code));
 
-// Get item type
-function getItemType(item) {
-  if (DB.weapons && DB.weapons.includes(item)) return 'weapon';
-  if (DB.armor && DB.armor.includes(item)) return 'armor';
-  if (DB.materials && DB.materials.includes(item)) return 'material';
-  if (DB.shrines && DB.shrines.includes(item)) return 'shrine';
-  if (DB.recipes && DB.recipes.includes(item)) return 'recipe';
-  return 'build';
-}
+  const items=allItems().filter(i=>norm(i.r)===code);
+  const grouped={};
+  items.forEach(i=>{const t=itemType(i);(grouped[t]=grouped[t]||[]).push(i);});
 
-// Get type display name
-function getTypeDisplay(type) {
-  const names = {
-    'weapon': 'Weapons',
-    'armor': 'Armor',
-    'material': 'Materials',
-    'shrine': 'Shrines',
-    'recipe': 'Recipes',
-    'build': 'Builds'
-  };
-  return names[type] || 'Items';
-}
+  document.getElementById('p-title').textContent=REGIONS[code]||code;
+  document.getElementById('p-count').textContent=items.length+' items';
 
-// Get items for region
-function getRegionItems(regionCode) {
-  if (!regionCode) return [];
-  const allItems = getAllItems();
-  return allItems.filter(item => normalizeRegion(item.r) === regionCode);
-}
-
-// Group items by type
-function groupItems(items) {
-  const grouped = {};
-  items.forEach(item => {
-    const type = getItemType(item);
-    if (!grouped[type]) grouped[type] = [];
-    grouped[type].push(item);
-  });
-  return grouped;
-}
-
-// Format item image tag
-function imgTag(item) {
-  const src = 'img/' + item.id + '.png';
-  const fb = item.emoji || '📦';
-  return '<img src="' + src + '" alt="' + item.name + '" onerror="this.outerHTML=\'<span>' + fb + '</span>\'" style="width:20px;height:20px;object-fit:contain;">';
-}
-
-// Show region details
-function showRegion(regionCode) {
-  const panel = document.getElementById('panel');
-  const titleEl = document.getElementById('panel-region');
-  const infoEl = document.getElementById('panel-info');
-  const bodyEl = document.getElementById('panel-items');
-
-  // Update active state on SVG
-  document.querySelectorAll('.region').forEach(r => r.classList.remove('active'));
-  document.querySelector('[data-region="' + regionCode + '"]').classList.add('active');
-
-  // Get items
-  const items = getRegionItems(regionCode);
-  const grouped = groupItems(items);
-
-  // Update header
-  titleEl.textContent = REGION_MAP[regionCode] || regionCode;
-  infoEl.textContent = items.length + ' items';
-
-  // Build content
-  if (items.length === 0) {
-    bodyEl.innerHTML = '<div class="panel-empty">No items in this region.</div>';
-  } else {
-    let html = '';
-    Object.keys(grouped).sort().forEach(type => {
-      const typeItems = grouped[type];
-      html += '<div class="item-group">';
-      html += '<div class="group-type">' + getTypeDisplay(type) + '</div>';
-      html += '<div class="items-list">';
-      typeItems.sort((a, b) => a.name.localeCompare(b.name)).forEach(item => {
-        html += '<div class="item-row" onclick="showDetail(\'' + item.id + '\')">';
-        html += '<span class="item-name">' + item.name + '</span>';
-        html += '<span class="item-count">1</span>';
-        html += '</div>';
-      });
-      html += '</div></div>';
+  const order=['weapon','armor','material','shrine','recipe','build'];
+  let html='';
+  order.forEach(t=>{
+    if(!grouped[t])return;
+    const list=grouped[t].sort((a,b)=>a.name.localeCompare(b.name));
+    html+='<div class="type-group"><div class="type-header">'+typeName(t)+' <span class="tcount">('+list.length+')</span></div><div class="items-grid">';
+    list.forEach(i=>{
+      html+='<div class="item-card" onclick="showDetail(\''+i.id+'\')"><div class="ic-emoji">'+imgTag(i)+'</div><div><div class="ic-name">'+i.name+'</div><div class="ic-sub">'+i.sub+'</div></div></div>';
     });
-    bodyEl.innerHTML = html;
-  }
+    html+='</div></div>';
+  });
+  if(!items.length)html='<p style="color:var(--t3);text-align:center;padding:20px;">No region-specific items.</p>';
 
-  // Show panel with animation
-  panel.classList.remove('hidden');
+  document.getElementById('p-body').innerHTML=html;
+  const panel=document.getElementById('items-panel');
+  panel.classList.add('open');
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// Show item detail modal
-function showDetail(itemId) {
-  const allItems = getAllItems();
-  const item = allItems.find(i => i.id === itemId);
-  if (!item) return;
+function closePanel(){
+  document.getElementById('items-panel').classList.remove('open');
+  document.querySelectorAll('.region').forEach(r=>r.classList.remove('active'));
+  document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));
+  activeRegion=null;
+}
 
-  const type = getItemType(item);
-  const modalEl = document.getElementById('modal');
-
-  // Build stats
-  let stats = '';
-  if (item.atk) stats += '<div class="mstat atk"><div class="mv">' + item.atk + '</div><div class="ml">Attack</div></div>';
-  if (item.def) stats += '<div class="mstat def"><div class="mv">' + item.def + '</div><div class="ml">Defense</div></div>';
-  if (item.fuseDmg) stats += '<div class="mstat"><div class="mv">+' + item.fuseDmg + '</div><div class="ml">Fuse Bonus</div></div>';
-  if (item.bonus) stats += '<div class="mstat gold"><div class="mv">' + item.bonus + '</div><div class="ml">Set Bonus</div></div>';
-  if (item.challenge) stats += '<div class="mstat gold"><div class="mv">' + item.challenge + '</div><div class="ml">Challenge</div></div>';
-  if (item.effect) stats += '<div class="mstat gold"><div class="mv">' + item.effect + '</div><div class="ml">Effect</div></div>';
-  if (item.hearts && item.hearts > 0) stats += '<div class="mstat def"><div class="mv">' + item.hearts + '</div><div class="ml">Hearts</div></div>';
-
-  // Build sections
-  let sections = '';
-  if (item.desc) sections += '<div class="modal-section"><h4>Description</h4><p>' + item.desc + '</p></div>';
-  if (item.loc) sections += '<div class="modal-section"><h4>Location</h4><p>📍 ' + item.loc + '</p></div>';
-  if (item.fuse) sections += '<div class="modal-section"><h4>Best Fusion</h4><p>💡 ' + item.fuse + '</p></div>';
-  if (item.pieces) sections += '<div class="modal-section"><h4>Pieces</h4><p>' + item.pieces.join(' · ') + '</p></div>';
-  if (item.components) sections += '<div class="modal-section"><h4>Components</h4><p>' + item.components + '</p></div>';
-  if (item.ingredients) sections += '<div class="modal-section"><h4>Ingredients</h4><p>🍳 ' + item.ingredients.join(' + ') + '</p></div>';
-
-  modalEl.innerHTML = '<button class="modal-close" onclick="closeModal()">✕</button>' +
-    '<div class="modal-hero">' +
-    '<div class="modal-emoji">' + imgTag(item) + '</div>' +
-    '<div class="modal-info"><h2>' + item.name + '</h2><div class="msub">' + item.sub + '</div></div>' +
-    '</div>' +
-    (stats ? '<div class="modal-stats">' + stats + '</div>' : '') +
-    sections;
-
+function showDetail(id){
+  const items=allItems();
+  const i=items.find(x=>x.id===id);if(!i)return;
+  let stats='';
+  if(i.atk)stats+='<div class="mstat atk"><div class="mv">'+i.atk+'</div><div class="ml">Attack</div></div>';
+  if(i.def)stats+='<div class="mstat def"><div class="mv">'+i.def+'</div><div class="ml">Defense</div></div>';
+  if(i.fuseDmg)stats+='<div class="mstat"><div class="mv">+'+i.fuseDmg+'</div><div class="ml">Fuse Bonus</div></div>';
+  if(i.bonus)stats+='<div class="mstat gold"><div class="mv">'+i.bonus+'</div><div class="ml">Set Bonus</div></div>';
+  if(i.challenge)stats+='<div class="mstat gold"><div class="mv">'+i.challenge+'</div><div class="ml">Challenge</div></div>';
+  if(i.effect)stats+='<div class="mstat gold"><div class="mv">'+i.effect+'</div><div class="ml">Effect</div></div>';
+  if(i.hearts&&i.hearts>0)stats+='<div class="mstat def"><div class="mv">'+i.hearts+'</div><div class="ml">Hearts</div></div>';
+  let sec='';
+  if(i.desc)sec+='<div class="modal-section"><h4>Description</h4><p>'+i.desc+'</p></div>';
+  if(i.loc)sec+='<div class="modal-section"><h4>Location</h4><p>📍 '+i.loc+'</p></div>';
+  if(i.fuse)sec+='<div class="modal-section"><h4>Best Fusion</h4><p>💡 '+i.fuse+'</p></div>';
+  if(i.pieces)sec+='<div class="modal-section"><h4>Pieces</h4><p>'+i.pieces.join(' · ')+'</p></div>';
+  if(i.components)sec+='<div class="modal-section"><h4>Components</h4><p>'+i.components+'</p></div>';
+  if(i.ingredients)sec+='<div class="modal-section"><h4>Ingredients</h4><p>🍳 '+i.ingredients.join(' + ')+'</p></div>';
+  document.getElementById('modal').innerHTML='<button class="modal-close" onclick="closeModal()">✕</button><div class="modal-hero"><div class="modal-emoji">'+imgTag(i)+'</div><div class="modal-info"><h2>'+i.name+'</h2><div class="msub">'+i.sub+'</div></div></div>'+(stats?'<div class="modal-stats">'+stats+'</div>':'')+sec;
   document.getElementById('modal-bg').classList.add('open');
 }
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
 
-function closeModal() {
-  document.getElementById('modal-bg').classList.remove('open');
-}
+// SVG region clicks
+document.querySelectorAll('.region').forEach(r=>{
+  r.addEventListener('click',()=>openRegion(r.dataset.region));
+});
+// Button clicks
+document.querySelectorAll('.rbtn').forEach(b=>{
+  b.addEventListener('click',()=>openRegion(b.dataset.r));
+});
+// Modal close
+document.getElementById('modal-bg').addEventListener('click',e=>{if(e.target.id==='modal-bg')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
-// Region click handler
-document.querySelectorAll('.region').forEach(region => {
-  region.addEventListener('click', () => {
-    const regionCode = region.dataset.region;
-    showRegion(regionCode);
+// Tooltip on SVG hover — highlight matching label
+document.querySelectorAll('.region').forEach(r=>{
+  r.addEventListener('mouseenter',()=>{
+    const code=r.dataset.region;
+    document.querySelectorAll('.rlabel').forEach(l=>{
+      // brighten matching labels
+    });
   });
 });
-
-// Modal close handlers
-document.getElementById('modal-bg').addEventListener('click', (e) => {
-  if (e.target.id === 'modal-bg') closeModal();
-});
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
-});
-
-// Show loading complete
-setTimeout(() => {
-  document.getElementById('boot').classList.add('done');
-  document.querySelector('.app').classList.add('visible');
-}, 1200);
 </script>
-
 </body>
 </html>

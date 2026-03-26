@@ -630,12 +630,12 @@ if(rs.length>0)return{text:`Here's what I found:`,cards:rs.slice(0,6)};
 return{text:`I don't have that yet — the knowledge base is growing. Try asking about weapons, armor, materials, builds, cooking, dragons, shrines, shields, bows, or combat tips.`,cards:[]};}
 
 const chat=document.getElementById('chat');
-function addMsg(html,isUser=false){const d=document.createElement('div');d.className=`msg ${isUser?'user':'companion'}`;d.innerHTML=`<div class="bubble">${html}</div>`;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+function addMsg(html,isUser=false){const d=document.createElement('div');d.className=`msg ${isUser?'user':'companion'}`;d.innerHTML=`<div class="bubble">${html}</div>`;chat.appendChild(d);if(isUser)d.scrollIntoView({behavior:'smooth',block:'end'});return d;}
 function addCompanionMsg(text,cards=[]){
   const map=renderMiniMap(cards);
   const d=document.createElement('div');d.className='msg companion';
   d.innerHTML=`<div class="bubble">${text}${renderCards(cards)}${map}</div>`;
-  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+  chat.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function send(text){if(!text.trim())return;addMsg(text,true);document.getElementById('input').value='';const t=addMsg('<div class="typing"><span></span><span></span><span></span></div>');t.id='typing';setTimeout(()=>{document.getElementById('typing')?.remove();const r=findResponse(text);addCompanionMsg(r.text,r.cards);},600+Math.random()*600);}
 

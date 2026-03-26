@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tears of the Kingdom - Completion Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sh: #00d4ff;
+            --bg: #030810;
+            --panel: #070e1c;
+            --card: #0b1528;
+            --border: #142040;
+            --t1: #e8ecf4;
+            --t2: #94a3b8;
+            --t3: #4a6080;
+            --gold: #f5c842;
+            --zonai: #7cfc00;
+            --depths: #a78bfa;
+            --red: #ff6b6b;
+            --blue: #60a5fa;
+            --orange: #ff9f43;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--t1);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: var(--sh);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--t1);
+        }
+
+        /* Header and Navigation */
+        header {
+            padding: 2rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(7, 14, 28, 0) 100%);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links{display:flex;gap:8px;justify-content:center;}
+        .nav-link{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);text-decoration:none;padding:5px 16px;border:1px solid var(--border);border-radius:20px;transition:all .35s cubic-bezier(.16,1,.3,1);}
+        .nav-link:hover{color:var(--sh);border-color:var(--sh);box-shadow:0 0 20px rgba(0,212,255,.1);transform:translateY(-1px);}
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--sh) 0%, var(--t1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Overall Progress Section */
+        .overall-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 4rem;
+            gap: 1.5rem;
+        }
+
+        .progress-ring-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .progress-ring-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 50px rgba(0, 212, 255, 0.6));
+            }
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 8;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--sh);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-ring-percentage {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--sh);
+        }
+
+        .progress-ring-label {
+            font-size: 0.85rem;
+            color: var(--t3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .overall-info {
+            text-align: center;
+        }
+
+        .overall-info h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--t1);
+            margin-bottom: 0.5rem;
+        }
+
+        .overall-info p {
+            color: var(--t2);
+            font-size: 1.1rem;
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, var(--card) 0%, rgba(11, 21, 40, 0.5) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            pointer-events: none;
+        }
+
+        .category-card:hover {
+            border-color: var(--sh);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(11, 21, 40, 0.8));
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-card.active {
+            grid-column: 1 / -1;
+            max-height: 600px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-title-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .category-progress-small {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .category-progress-small svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .category-progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .category-progress-percentage {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .category-progress-label {
+            font-size: 0.7rem;
+            color: var(--t3);
+            text-transform: uppercase;
+        }
+
+        .category-info h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            font-size: 0.95rem;
+            color: var(--t2);
+        }
+
+        .expand-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sh);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .category-card.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Checklist */
+        .checklist {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .category-card.active .checklist {
+            display: block;
+        }
+
+        .checklist-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .checklist-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .checklist-items::-webkit-scrollbar-track {
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .checklist-items::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .checklist-items::-webkit-scrollbar-thumb:hover {
+            background: var(--sh);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: var(--sh);
+        }
+
+        .checklist-item.completed {
+            opacity: 0.6;
+        }
+
+        .checklist-item.completed .item-name {
+            text-decoration: line-through;
+            color: var(--t3);
+        }
+
+        .item-checkbox {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--sh);
+            border-radius: 3px;
+            background: transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-checkbox:checked {
+            background: var(--sh);
+            border-color: var(--sh);
+        }
+
+        .item-checkbox:checked::after {
+            content: '✓';
+            color: var(--bg);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .item-name {
+            font-size: 0.9rem;
+            color: var(--t2);
+            transition: all 0.2s ease;
+        }
+
+        /* Color variants for categories */
+        .category-card[data-category="weapons"] .progress-ring-fill,
+        .category-card[data-category="weapons"] .expand-icon {
+            stroke: var(--red);
+            color: var(--red);
+        }
+
+        .category-card[data-category="weapons"] .progress-ring-percentage {
+            color: var(--red);
+        }
+
+        .category-card[data-category="armor"] .progress-ring-fill,
+        .category-card[data-category="armor"] .expand-icon {
+            stroke: var(--blue);
+            color: var(--blue);
+        }
+
+        .category-card[data-category="armor"] .progress-ring-percentage {
+            color: var(--blue);
+        }
+
+        .category-card[data-category="materials"] .progress-ring-fill,
+        .category-card[data-category="materials"] .expand-icon {
+            stroke: var(--zonai);
+            color: var(--zonai);
+        }
+
+        .category-card[data-category="materials"] .progress-ring-percentage {
+            color: var(--zonai);
+        }
+
+        .category-card[data-category="builds"] .progress-ring-fill,
+        .category-card[data-category="builds"] .expand-icon {
+            stroke: var(--depths);
+            color: var(--depths);
+        }
+
+        .category-card[data-category="builds"] .progress-ring-percentage {
+            color: var(--depths);
+        }
+
+        .category-card[data-category="shrines"] .progress-ring-fill,
+        .category-card[data-category="shrines"] .expand-icon {
+            stroke: var(--gold);
+            color: var(--gold);
+        }
+
+        .category-card[data-category="shrines"] .progress-ring-percentage {
+            color: var(--gold);
+        }
+
+        .category-card[data-category="recipes"] .progress-ring-fill,
+        .category-card[data-category="recipes"] .expand-icon {
+            stroke: var(--orange);
+            color: var(--orange);
+        }
+
+        .category-card[data-category="recipes"] .progress-ring-percentage {
+            color: var(--orange);
+        }
+
+        /* Glow effects for category cards */
+        .category-card[data-category="weapons"]:hover {
+            box-shadow: 0 12px 40px rgba(255, 107, 107, 0.15);
+        }
+
+        .category-card[data-category="armor"]:hover {
+            box-shadow: 0 12px 40px rgba(96, 165, 250, 0.15);
+        }
+
+        .category-card[data-category="materials"]:hover {
+            box-shadow: 0 12px 40px rgba(124, 252, 0, 0.15);
+        }
+
+        .category-card[data-category="builds"]:hover {
+            box-shadow: 0 12px 40px rgba(167, 139, 250, 0.15);
+        }
+
+        .category-card[data-category="shrines"]:hover {
+            box-shadow: 0 12px 40px rgba(245, 200, 66, 0.15);
+        }
+
+        .category-card[data-category="recipes"]:hover {
+            box-shadow: 0 12px 40px rgba(255, 159, 67, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .checklist-items {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-ring-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .progress-ring-percentage {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Companion</a>
+                <a href="browse.html" class="nav-link">Browse</a>
+                <a href="map.html" class="nav-link">Map</a>
+            </div>
+        </div>
+        <h1>Completion Tracker</h1>
+    </header>
+
+    <div class="container">
+        <!-- Overall Progress -->
+        <div class="overall-section">
+            <div class="progress-ring-container">
+                <svg class="progress-ring-svg" viewBox="0 0 200 200">
+                    <circle class="progress-ring-circle" cx="100" cy="100" r="90"></circle>
+                    <circle class="progress-ring-fill" id="overallProgressRing" cx="100" cy="100" r="90" style="stroke-dasharray: 565.48; stroke-dashoffset: 565.48;"></circle>
+                </svg>
+                <div class="progress-ring-text">
+                    <div class="progress-ring-percentage" id="overallPercentage">0%</div>
+                    <div class="progress-ring-label">Total</div>
+                </div>
+            </div>
+            <div class="overall-info">
+                <h2>Your Journey</h2>
+                <p><span id="completedCount">0</span> of 478 items completed</p>
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid" id="categoriesGrid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        // Category data
+        const categories = [
+            { id: 'weapons', name: 'Weapons', total: 97, color: 'var(--red)' },
+            { id: 'armor', name: 'Armor', total: 36, color: 'var(--blue)' },
+            { id: 'materials', name: 'Materials', total: 130, color: 'var(--zonai)' },
+            { id: 'builds', name: 'Builds', total: 28, color: 'var(--depths)' },
+            { id: 'shrines', name: 'Shrines', total: 152, color: 'var(--gold)' },
+            { id: 'recipes', name: 'Recipes', total: 35, color: 'var(--orange)' }
+        ];
+
+        // Initialize localStorage
+        function initializeStorage() {
+            categories.forEach(cat => {
+                const key = `tracker_${cat.id}`;
+                if (!localStorage.getItem(key)) {
+                    localStorage.setItem(key, JSON.stringify({}));
+                }
+            });
+        }
+
+        // Get completed items for a category
+        function getCompleted(categoryId) {
+            const key = `tracker_${categoryId}`;
+            return JSON.parse(localStorage.getItem(key) || '{}');
+        }
+
+        // Save completed items
+        function saveCompleted(categoryId, completed) {
+            const key = `tracker_${categoryId}`;
+            localStorage.setItem(key, JSON.stringify(completed));
+            updateProgress();
+        }
+
+        // Calculate percentage
+        function calculatePercentage(completed, total) {
+            return total === 0 ? 0 : Math.round((Object.keys(completed).length / total) * 100);
+        }
+
+        // Update progress ring
+        function updateProgressRing(element, percentage, radius = 90) {
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            element.style.strokeDashoffset = offset;
+        }
+
+        // Generate item list from db.js
+        function getItemsList(categoryId) {
+            if (typeof window.TKDB === 'undefined') {
+                return [];
+            }
+            const items = window.TKDB[categoryId] || [];
+            return Array.isArray(items) ? items : Object.keys(items);
+        }
+
+        // Render categories
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+
+            categories.forEach(cat => {
+                const completed = getCompleted(cat.id);
+                const items = getItemsList(cat.id);
+                const completedCount = Object.keys(completed).length;
+                const percentage = calculatePercentage(completed, cat.total);
+
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.dataset.category = cat.id;
+                card.dataset.total = cat.total;
+
+                const circumference = 2 * Math.PI * 36;
+                const offset = circumference - (percentage / 100) * circumference;
+
+                card.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-title-section">
+                            <div class="category-progress-small">
+                                <svg viewBox="0 0 80 80" style="transform: rotate(-90deg); transform-origin: 50% 50%;">
+                                    <circle cx="40" cy="40" r="36" class="progress-ring-circle" style="stroke: var(--border); fill: none; stroke-width: 6;"></circle>
+                                    <circle cx="40" cy="40" r="36" class="progress-ring-fill" style="fill: none; stroke-width: 6; stroke-dasharray: ${circumference}; stroke-dashoffset: ${offset}; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease;"></circle>
+                                </svg>
+                                <div class="category-progress-text">
+                                    <div class="category-progress-percentage">${percentage}%</div>
+                                    <div class="category-progress-label">Done</div>
+                                </div>
+                            </div>
+                            <div class="category-info">
+                                <h3>${cat.name}</h3>
+                                <div class="category-count">${completedCount} / ${cat.total} completed</div>
+                            </div>
+                        </div>
+                        <div class="expand-icon">⌄</div>
+                    </div>
+
+                    <div class="checklist">
+                        <div class="checklist-items">
+                            ${items.map((item, idx) => {
+                                const isCompleted = completed[idx] || false;
+                                return `
+                                    <div class="checklist-item ${isCompleted ? 'completed' : ''}" data-index="${idx}">
+                                        <input type="checkbox" class="item-checkbox" ${isCompleted ? 'checked' : ''}>
+                                        <div class="item-name">${item}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.item-checkbox')) {
+                        const checkbox = e.target.closest('.item-checkbox');
+                        const item = checkbox.closest('.checklist-item');
+                        const index = parseInt(item.dataset.index);
+                        const newCompleted = { ...completed };
+                        
+                        if (checkbox.checked) {
+                            newCompleted[index] = true;
+                        } else {
+                            delete newCompleted[index];
+                        }
+                        
+                        saveCompleted(cat.id, newCompleted);
+                        renderCategories();
+                    } else if (!e.target.closest('.item-checkbox')) {
+                        card.classList.toggle('active');
+                    }
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Update overall progress
+        function updateProgress() {
+            let totalCompleted = 0;
+            let totalItems = 0;
+
+            categories.forEach(cat => {
+                const completed = getCompleted(cat.id);
+                totalCompleted += Object.keys(completed).length;
+                totalItems += cat.total;
+            });
+
+            const percentage = totalItems === 0 ? 0 : Math.round((totalCompleted / totalItems) * 100);
+            
+            document.getElementById('overallPercentage').textContent = `${percentage}%`;
+            document.getElementById('completedCount').textContent = totalCompleted;
+            
+            const circumference = 2 * Math.PI * 90;
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('overallProgressRing').style.strokeDashoffset = offset;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeStorage();
+            renderCategories();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
